@@ -27,5 +27,5 @@ export const RecoverPassword = sequelize.define('RecoverPassword', {
     },
 }, {
     timestamps: true,
-    tableName: 'recover_passwords',  // Nombre de la tabla de recuperación de contraseñas
+    tableName: 'recover_password',  // Nombre de la tabla de recuperación de contraseñas
 });

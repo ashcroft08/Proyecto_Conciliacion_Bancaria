@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/database.js';
 
 export const Banco = sequelize.define('Banco', {
-    cod_banco: {
+    cod_transaccion_banco: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true

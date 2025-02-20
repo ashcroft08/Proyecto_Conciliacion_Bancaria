@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/database.js';
 import { Rol } from './Rol.js'; // Importar Rol antes de las relaciones
-import bcrypt from 'bcrypt'; 
+import bcrypt from 'bcrypt';
 
 export const Usuario = sequelize.define('Usuario', {
     cod_usuario: {
@@ -46,6 +46,11 @@ export const Usuario = sequelize.define('Usuario', {
         type: DataTypes.DATE,
         allowNull: true, // Puede ser nulo si no está bloqueado
     },
+    // Nueva columna para controlar si el usuario ha cambiado su contraseña
+    has_changed_password: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false, // Por defecto, el usuario no ha cambiado su contraseña
+    },
 }, {
     tableName: 'usuario', // Nombre explícito de la tabla
     timestamps: true, // Para manejar createdAt y updatedAt automáticamente
@@ -67,7 +72,7 @@ Usuario.afterSync(async () => {
                 email: 'admin@gmail.com',
                 password: await bcrypt.hash('Admin08_*', 10), // Encriptar la contraseña
             });
-            
+
             console.log('Administrador insertado exitosamente');
         } else {
             console.log('Administrador ya existe. No se realizaron cambios.');
