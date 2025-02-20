@@ -5,6 +5,8 @@ import { Conciliacion } from "./models/Conciliacion.js";
 import { Banco } from './models/Banco.js';
 import { Revision } from './models/Revision.js';
 import { Estado } from "./models/Estado.js";
+import { ConfiguracionToken } from './models/ConfiguracionToken.js';
+import { RecoverPassword } from './models/RecoverPassword.js';
 
 // Importa todos los modelos necesarios...
 
@@ -25,4 +27,7 @@ export const setupAssociations = () => {
 
     Estado.hasMany(Conciliacion, { foreignKey: 'cod_estado' });
     Conciliacion.belongsTo(Estado, { foreignKey: 'cod_estado' });
+
+    Usuario.hasMany(RecoverPassword, { foreignKey: 'cod_usuario' });
+    RecoverPassword.belongsTo(Usuario, { foreignKey: 'cod_usuario' });
 };
