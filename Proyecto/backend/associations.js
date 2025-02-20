@@ -7,6 +7,7 @@ import { Revision } from './models/Revision.js';
 import { Estado } from "./models/Estado.js";
 import { ConfiguracionToken } from './models/ConfiguracionToken.js';
 import { RecoverPassword } from './models/RecoverPassword.js';
+import { RevisionAutomatizada } from './models/RevisionAutomatizada.js';
 
 // Importa todos los modelos necesarios...
 
@@ -19,11 +20,14 @@ export const setupAssociations = () => {
     Transaccion.hasMany(Conciliacion, { foreignKey: 'cod_transaccion' });
     Conciliacion.belongsTo(Transaccion, { foreignKey: 'cod_transaccion' });
 
-    Banco.hasMany(Conciliacion, { foreignKey: 'cod_banco' });
-    Conciliacion.belongsTo(Banco, { foreignKey: 'cod_banco' });
+    Banco.hasMany(Conciliacion, { foreignKey: 'cod_transaccion_banco' });
+    Conciliacion.belongsTo(Banco, { foreignKey: 'cod_transaccion_banco' });
 
     Revision.hasMany(Conciliacion, { foreignKey: 'cod_revision' });
     Conciliacion.belongsTo(Revision, { foreignKey: 'cod_revision' });
+
+    RevisionAutomatizada.hasMany(Conciliacion, { foreignKey: 'cod_revision_automatizada' });
+    Conciliacion.belongsTo(RevisionAutomatizada, { foreignKey: 'cod_revision_automatizada' });
 
     Estado.hasMany(Conciliacion, { foreignKey: 'cod_estado' });
     Conciliacion.belongsTo(Estado, { foreignKey: 'cod_estado' });

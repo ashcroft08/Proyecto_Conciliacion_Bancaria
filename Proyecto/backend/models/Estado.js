@@ -8,10 +8,6 @@ export const Estado = sequelize.define('Estado', {
         autoIncrement: true
     },
     estado: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    valor: {
         type: DataTypes.BOOLEAN,
         allowNull: false
     }
@@ -28,8 +24,8 @@ Estado.afterSync(async () => {
         if (count === 0) {
             // Insertar valores iniciales
             await Estado.bulkCreate([
-                { estado: 'Aprobado', valor: true },
-                { estado: 'Reprobado', valor: false }
+                { estado: true },
+                { estado: false }
             ]);
             console.log('Datos de Estado iniciales insertados correctamente.');
         } else {

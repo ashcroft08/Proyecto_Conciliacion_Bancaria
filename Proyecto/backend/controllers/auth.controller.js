@@ -125,6 +125,14 @@ export const login = async (req, res) => {
         // Configurar cookie
         res.cookie("token", token);
 
+        if (!userFound.has_changed_password) {
+            return res.status(200).json({
+                message: "Debes cambiar tu contraseña",
+                mustChangePassword: true, // Indicador para el frontend
+                cod_usuario: userFound.cod_usuario,
+            });
+        }
+
         // Responder con datos del usuario
         res.json({
             cod_usuario: userFound.cod_usuario,
@@ -132,11 +140,37 @@ export const login = async (req, res) => {
             nombres: userFound.nombres,
             apellidos: userFound.apellidos,
             email: userFound.email,
+            has_changed_password: userFound.has_changed_password,
             createdAt: userFound.createdAt,
             updatedAt: userFound.updatedAt,
         });
     } catch (error) {
         console.error('Error en el proceso de login:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const cambiarContrasena = async (req, res) => {
+    const { cod_usuario, newPassword } = req.body;
+
+    try {
+        // Buscar usuario por código de usuario
+        const userFound = await findUsuarioById(cod_usuario);
+        if (!userFound) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        // Encriptar la nueva contraseña
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Actualizar la contraseña y marcar que el usuario ha cambiado su contraseña
+        await updateUsuario(cod_usuario, {
+            password: hashedPassword,
+            has_changed_password: true,
+        });
+
+        res.status(200).json({ message: "Contraseña cambiada exitosamente" });
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };

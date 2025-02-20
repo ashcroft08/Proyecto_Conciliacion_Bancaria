@@ -15,17 +15,25 @@ export const Conciliacion = sequelize.define('Conciliacion', {
             key: 'cod_transaccion', // Clave referenciada
         },
     },
-    cod_banco: {
+    cod_transaccion_banco: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
             model: 'banco', // Hace referencia directamente al modelo Rol
-            key: 'cod_banco', // Clave referenciada
+            key: 'cod_transaccion_banco', // Clave referenciada
+        },
+    },
+    cod_revision_automatizada: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'revision_automatizada', // Hace referencia directamente al modelo Rol
+            key: 'cod_revision_automatizada', // Clave referenciada
         },
     },
     cod_revision: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'revision', // Hace referencia directamente al modelo Rol
             key: 'cod_revision', // Clave referenciada
