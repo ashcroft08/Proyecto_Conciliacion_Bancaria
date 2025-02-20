@@ -1,0 +1,23 @@
+{
+  "name": "proyecto",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon backend/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
