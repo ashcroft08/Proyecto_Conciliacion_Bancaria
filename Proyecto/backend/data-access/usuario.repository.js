@@ -19,17 +19,6 @@ export const countUsuariosByRol = async (cod_rol) => {
     return await Usuario.count({ where: { cod_rol } });
 };
 
-export const findUsuarioByCedulaOrEmail = async (cedula, email, cod_rol) => {
-    return await Usuario.findOne({
-        where: {
-            [Op.or]: [
-                { cedula, cod_rol },
-                { email, cod_rol },
-            ],
-        },
-    });
-};
-
 export const updateUsuario = async (cod_usuario, updateData) => {
     return await Usuario.update(updateData, { where: { cod_usuario } });
 };

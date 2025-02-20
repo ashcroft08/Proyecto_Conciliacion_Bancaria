@@ -9,7 +9,6 @@ import {
     findUsuarioByEmail,
     findUsuarioById,
     countUsuariosByRol,
-    findUsuarioByCedulaOrEmail,
     updateUsuario,
 } from '../data-access/usuario.repository.js';
 import { RecoverPassword } from '../models/RecoverPassword.js';
@@ -31,16 +30,6 @@ export const register = async (req, res) => {
         if (codRolNumber === 1) {
             const adminCount = await countUsuariosByRol(1);
             if (adminCount >= 3) return res.status(400).json(["Límite de administradores alcanzado"]);
-        }
-
-        // Buscar registros existentes
-        const existingUser = await findUsuarioByCedulaOrEmail(email, codRolNumber);
-        if (existingUser) {
-            if (existingUser.cod_rol === codRolNumber) {
-                if (existingUser.email === email) {
-                    return res.status(400).json(["Email ya registrado en este rol"]);
-                }
-            }
         }
 
         // Crear nuevo usuario
