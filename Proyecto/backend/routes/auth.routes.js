@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
     login,
-    cambiarContrasena,
     logout,
     register,
     verifyToken,
@@ -20,8 +19,6 @@ router.post("/register", validateSchema(registerSchema), register);
 router.post("/login", validateSchema(loginSchema), loginLimiter, login);
 
 router.get("/verify-token", verifyToken);
-
-router.post('/cambiar-contrasena', cambiarContrasena);
 
 router.post("/logout", logout);
 

@@ -19,7 +19,7 @@ export const Rol = sequelize.define('Rol', {
 
 // Hook para insertar roles iniciales
 Rol.afterSync(async () => {
-    const roles = ['Administrador', 'Gerente', 'Auditor', 'Jefe contable', 'Contador'];
+    const roles = ['Superusuario', 'Administrador', 'Gerente', 'Auditor', 'Jefe contable', 'Contador'];
     for (const nombre of roles) {
         await Rol.findOrCreate({ where: { nombre_rol: nombre } });
     }

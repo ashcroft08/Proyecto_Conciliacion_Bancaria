@@ -46,11 +46,6 @@ export const Usuario = sequelize.define('Usuario', {
         type: DataTypes.DATE,
         allowNull: true, // Puede ser nulo si no está bloqueado
     },
-    // Nueva columna para controlar si el usuario ha cambiado su contraseña
-    has_changed_password: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false, // Por defecto, el usuario no ha cambiado su contraseña
-    },
 }, {
     tableName: 'usuario', // Nombre explícito de la tabla
     timestamps: true, // Para manejar createdAt y updatedAt automáticamente
@@ -58,7 +53,7 @@ export const Usuario = sequelize.define('Usuario', {
 
 // Hook para crear un administrador inicial (si no existe)
 Usuario.afterSync(async () => {
-    const superRol = await Rol.findOne({ where: { nombre_rol: 'Administrador' } });
+    const superRol = await Rol.findOne({ where: { nombre_rol: 'Superusuario' } });
     if (superRol) {
         // Verificar si ya existe un usuario con el rol de administrador
         const existingUser = await Usuario.findOne({ where: { cod_rol: superRol.cod_rol } });

@@ -45,7 +45,7 @@ export async function actualizarConfiguracionToken(req, res) {
         const updatedConfig = await actualizarConfiguracion(config, expiresIn);
 
         // Devolver la configuración actualizada
-        res.json(updatedConfig);
+        return res.status(201).json(updatedConfig);
     } catch (error) {
         console.error('Error al actualizar la configuración del token:', error);
         res.status(500).json({ message: 'Error interno del servidor' });
