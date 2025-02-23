@@ -8,6 +8,7 @@ import { Estado } from "./models/Estado.js";
 import { ConfiguracionToken } from './models/ConfiguracionToken.js';
 import { RecoverPassword } from './models/RecoverPassword.js';
 import { RevisionAutomatizada } from './models/RevisionAutomatizada.js';
+import { Caducidad } from './models/Caducidad.js';
 
 // Importa todos los modelos necesarios...
 
@@ -34,4 +35,7 @@ export const setupAssociations = () => {
 
     Usuario.hasMany(RecoverPassword, { foreignKey: 'cod_usuario' });
     RecoverPassword.belongsTo(Usuario, { foreignKey: 'cod_usuario' });
+
+    Usuario.hasMany(Caducidad, { foreignKey: 'cod_usuario' });
+    Caducidad.belongsTo(Usuario, { foreignKey: 'cod_usuario' });
 };

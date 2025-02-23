@@ -3,6 +3,7 @@ import {
     findUserById,
     findAdminsExcludingUser,
     findUsersByRole,
+    findUsersAuditor,
     deleteUserById,
     updateUserById,
     updateUserPasswordById,
@@ -44,7 +45,7 @@ export const getUserGerente = async (req, res) => {
 
 export const getUsersAuditor = async (req, res) => {
     try {
-        const auditor = await findUsersByRole(4);
+        const auditor = await findUsersAuditor(4);
         res.json(auditor);
     } catch (error) {
         return res.status(500).json({ message: error.message });

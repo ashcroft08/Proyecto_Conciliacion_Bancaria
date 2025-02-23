@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import {
   getUsersAdminRequest,
   getUserContadorRequest,
+  getUserAuditoresRequest,
   getUserRequest,
   updateUserRequest,
   deleteUserRequest,
@@ -34,6 +35,16 @@ export function UserProvider({ children }) {
   const getUsersContadores = async () => {
     try {
       const res = await getUserContadorRequest();
+      //console.log("Usuarios obtenidos:", res.data); // Agrega este log
+      setUsers(res.data);
+    } catch (error) {
+      console.error("Error fetching contador users:", error);
+    }
+  };
+
+  const getUsersAuditores = async () => {
+    try {
+      const res = await getUserAuditoresRequest();
       //console.log("Usuarios obtenidos:", res.data); // Agrega este log
       setUsers(res.data);
     } catch (error) {
@@ -104,6 +115,7 @@ export function UserProvider({ children }) {
         users,
         getUsersAdmin,
         getUsersContadores,
+        getUsersAuditores,
         getUser,
         updateUser,
         deleteUser,

@@ -1,4 +1,5 @@
 import { Usuario } from "../models/Usuario.js";
+import { Caducidad } from "../models/Caducidad.js";
 import { Op } from 'sequelize';
 import bcrypt from 'bcryptjs';
 
@@ -22,6 +23,20 @@ export const findUsersByRole = async (cod_rol) => {
     return await Usuario.findAll({
         where: { cod_rol },
         order: [['cod_usuario', 'ASC']]
+    });
+};
+
+export const findUsersAuditor = async (cod_rol) => {
+    return await Usuario.findAll({
+        where: { cod_rol },
+        include: [
+            {
+                model: Caducidad, // Incluir la relación con Caducidad
+                attributes: ['fecha_expiracion'], // Seleccionar solo la fecha de expiración
+            },
+        ],
+        attributes: ['nombres', 'apellidos', 'email'], // Seleccionar solo estos campos de Usuario
+        order: [['cod_usuario', 'ASC']],
     });
 };
 
