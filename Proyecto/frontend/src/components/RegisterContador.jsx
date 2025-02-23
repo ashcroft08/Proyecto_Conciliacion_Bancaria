@@ -25,9 +25,9 @@ import Input from "../components/ui/Input";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "./ui/CustomToast";
 
-export const RegisterAdmin = () => {
-  const { users, getUsersAdmin, getUser, updateUser, deleteUser } = useUser();
-  const { user } = useAuth();
+export const RegisterContador = () => {
+  const { users, getUsersContadores, getUser, updateUser, deleteUser } =
+    useUser();
   const [records, setRecords] = useState([]);
   const [visible, setVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
@@ -53,12 +53,12 @@ export const RegisterAdmin = () => {
     const fetchUsers = async () => {
       if (!hasFetchedUsers.current) {
         // Solo llama a la API si no se ha hecho antes
-        await getUsersAdmin();
+        await getUsersContadores();
         hasFetchedUsers.current = true; // Marca que ya se han obtenido los usuarios
       }
     };
     fetchUsers();
-  }, [getUsersAdmin]); // Solo se ejecuta una vez al montar el componente
+  }, [getUsersContadores]); // Solo se ejecuta una vez al montar el componente
 
   // Actualiza los registros cuando 'users' cambie
   useEffect(() => {
@@ -78,9 +78,9 @@ export const RegisterAdmin = () => {
     console.log("Datos enviados:", values);
     const success = await signup(values);
     if (success) {
-      CustomToast("¡Administrador registrado exitosamente!", "success");
+      CustomToast("¡Contador registrado exitosamente!", "success");
       setVisible(false); // Cierra el modal
-      await getUsersAdmin(); // Actualiza la lista de usuarios después de registrar uno nuevo
+      await getUsersContadores(); // Actualiza la lista de usuarios después de registrar uno nuevo
       reset(); // Limpia el formulario después de un registro exitoso
     } else {
       console.log("Error al registrar usuario.");
@@ -124,9 +124,9 @@ export const RegisterAdmin = () => {
     try {
       const success = await updateUser(editUser.cod_usuario, values);
       if (success) {
-        CustomToast("¡Administrador actualizado exitosamente!", "success");
+        CustomToast("¡Contador actualizado exitosamente!", "success");
         setEditVisible(false);
-        await getUsersAdmin(); // Actualizar lista
+        await getUsersContadores(); // Actualizar lista
       }
     } catch (error) {
       CustomToast(
@@ -145,9 +145,9 @@ export const RegisterAdmin = () => {
     const success = await deleteUser(currentUser.cod_usuario); // Esperar a que deleteUser se complete
     if (success) {
       // Solo mostrar el mensaje de éxito si la eliminación fue exitosa
-      CustomToast("¡Administrador eliminado exitosamente!", "success");
+      CustomToast("¡Contador eliminado exitosamente!", "success");
       setDeleteVisible(false);
-      await getUsersAdmin();
+      await getUsersContadores();
     }
     setDeleteVisible(false);
   };
@@ -179,12 +179,9 @@ export const RegisterAdmin = () => {
           >
             <FaEdit />
           </CButton>
-          {/* Mostrar el botón de eliminar solo si el rol del usuario es 1 */}
-          {user?.cod_rol === 1 && ( // Usa && para condicionalmente renderizar
-            <CButton color="danger" onClick={() => handleDelete(row)}>
-              <FaTrash />
-            </CButton>
-          )}
+          <CButton color="danger" onClick={() => handleDelete(row)}>
+            <FaTrash />
+          </CButton>
         </div>
       ),
     },
@@ -224,7 +221,7 @@ export const RegisterAdmin = () => {
                 onClick={() => setVisible(true)}
                 className="fw-bold"
               >
-                Crear nuevo administrador
+                Crear nuevo contador
               </CButton>
             </CInputGroup>
           </div>
@@ -250,7 +247,7 @@ export const RegisterAdmin = () => {
           />
         </CCardBody>
 
-        {/* Modal para crear nuevo administrador */}
+        {/* Modal para crear nuevo contador */}
         <CModal
           backdrop="static"
           alignment="center"
@@ -261,7 +258,7 @@ export const RegisterAdmin = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <CModalHeader>
               <CModalTitle id="VerticallyCenteredExample" className="fw-bold">
-                Crear Administrador
+                Crear Contador
               </CModalTitle>
             </CModalHeader>
             <CModalBody>
@@ -365,7 +362,7 @@ export const RegisterAdmin = () => {
                 <input
                   type="hidden"
                   id="cod_rol"
-                  value="2"
+                  value="6"
                   {...register("cod_rol", {
                     required: "El rol es obligatorio",
                   })}
@@ -393,9 +390,7 @@ export const RegisterAdmin = () => {
         >
           <form onSubmit={handleSubmitEdit(onSubmitEdit)}>
             <CModalHeader>
-              <CModalTitle className="fw-bold">
-                Editar Administrador
-              </CModalTitle>
+              <CModalTitle className="fw-bold">Editar Contador</CModalTitle>
             </CModalHeader>
             <CModalBody>
               <div className="mt-2">

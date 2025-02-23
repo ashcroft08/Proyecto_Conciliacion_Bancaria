@@ -1,4 +1,4 @@
-function ContadorPage() {
+export function ContadorPage() {
   return (
     <div>ContadorPage</div>
   )

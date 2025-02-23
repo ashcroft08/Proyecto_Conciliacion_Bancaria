@@ -18,7 +18,7 @@ export const register = async (req, res) => {
         const { nombres, apellidos, email, password, confirmPassword, cod_rol } = req.body;
 
         const codRolNumber = parseInt(cod_rol, 10);
-        if (isNaN(codRolNumber) || codRolNumber < 2 || codRolNumber > 4) {
+        if (isNaN(codRolNumber) || codRolNumber < 2 || codRolNumber > 6) {
             return res.status(400).json(["Rol inválido"]);
         }
 
@@ -27,8 +27,8 @@ export const register = async (req, res) => {
         }
 
         // Límite de administradores
-        if (codRolNumber === 1) {
-            const adminCount = await countUsuariosByRol(1);
+        if (codRolNumber === 2) {
+            const adminCount = await countUsuariosByRol(2);
             if (adminCount >= 3) return res.status(400).json(["Límite de administradores alcanzado"]);
         }
 
@@ -180,7 +180,7 @@ export const sendRecoveryCode = async (req, res) => {
 
     try {
         // Buscar el usuario por correo electrónico
-        const user = await Usuario.findOne({ where: { email } });
+        const user = await findUsuarioByEmail(email);
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
@@ -215,7 +215,7 @@ export const validateRecoveryCode = async (req, res) => {
 
     try {
         // Buscar el usuario por correo electrónico
-        const user = await Usuario.findOne({ where: { email } });
+        const user = await findUsuarioByEmail(email);
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
@@ -246,7 +246,7 @@ export const resetPassword = async (req, res) => {
 
     try {
         // Buscar el usuario por correo electrónico
-        const user = await Usuario.findOne({ where: { email } });
+        const user = await findUsuarioByEmail(email);
         if (!user) {
             return res.status(404).json({ message: "Usuario no encontrado" });
         }
@@ -274,7 +274,7 @@ export const resetPassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Actualizar la contraseña del usuario
-        await Usuario.update({ password: hashedPassword }, { where: { cod_usuario: user.cod_usuario } });
+        await updateUsuario(user.cod_usuario, { password: hashedPassword });
 
         // Eliminar el registro de recuperación
         await recoveryRecord.destroy();

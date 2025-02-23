@@ -5,6 +5,7 @@ import { RegisterAdmin } from "../components/RegisterAdmin";
 import { RegisterGerente } from "../components/RegisterGerente";
 import { RegisterAuditor } from "../components/RegisterAuditor";
 import { RegisterJefeContador } from "../components/RegisterJefeContador";
+import { RegisterContador } from "../components/RegisterContador";
 import EditPerfil from "../components/EditPerfil";
 import { ConfiguracionToken } from "../components/ConfiguracionToken";
 
@@ -14,6 +15,7 @@ const componentMap = {
   Gerente: () => <RegisterGerente />,
   Auditor: () => <RegisterAuditor />, // Receive setErrors as a prop
   "Jefe contable": () => <RegisterJefeContador />,
+  Contadores: () => <RegisterContador/>,
   "Configuración token": () => <ConfiguracionToken />,
   Perfil: () => <EditPerfil />,
   "/": () => <div>Logout</div>,

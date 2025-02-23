@@ -16,81 +16,84 @@ import AuditorPage from "./pages/AuditorPage";
 import JefeContadorPage from "./pages/JefeContadorPage";
 import ContadorPage from "./pages/ContadorPage";
 import { TokenProvider } from "./context/ConfiguracionTokenContext";
+import { UserProvider } from "./context/UserContext";
 
 function App() {
   return (
     <>
       <AuthProvider>
-        <TokenProvider>
-          <BrowserRouter>
-            <RecoverPasswordProvider>
-              <Routes>
-                {/* Rutas públicas */}
-                <Route
-                  path="/"
-                  element={
-                    <PublicRoute>
-                      <HomePage />
-                    </PublicRoute>
-                  }
-                />
-                <Route
-                  path="/login"
-                  element={
-                    <PublicRoute>
-                      <LoginPage />
-                    </PublicRoute>
-                  }
-                />
-                <Route
-                  path="/recoverpassword"
-                  element={
-                    <PublicRoute>
-                      <RecoverPasswordPage />
-                    </PublicRoute>
-                  }
-                />
-                <Route
-                  path="/validate-recovery-code"
-                  element={
-                    <PublicRoute>
-                      <OTPInputPage />
-                    </PublicRoute>
-                  }
-                />
-                <Route
-                  path="/reset-password"
-                  element={
-                    <PublicRoute>
-                      <ResetPasswordPage />
-                    </PublicRoute>
-                  }
-                />
+        <UserProvider>
+          <TokenProvider>
+            <BrowserRouter>
+              <RecoverPasswordProvider>
+                <Routes>
+                  {/* Rutas públicas */}
+                  <Route
+                    path="/"
+                    element={
+                      <PublicRoute>
+                        <HomePage />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/login"
+                    element={
+                      <PublicRoute>
+                        <LoginPage />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/recoverpassword"
+                    element={
+                      <PublicRoute>
+                        <RecoverPasswordPage />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/validate-recovery-code"
+                    element={
+                      <PublicRoute>
+                        <OTPInputPage />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/reset-password"
+                    element={
+                      <PublicRoute>
+                        <ResetPasswordPage />
+                      </PublicRoute>
+                    }
+                  />
 
-                {/* Rutas protegidas */}
-                <Route element={<ProtectedRoute roles={[1, 2]} />}>
-                  <Route path="/admin" element={<AdminPage />} />
-                </Route>
+                  {/* Rutas protegidas */}
+                  <Route element={<ProtectedRoute roles={[1, 2]} />}>
+                    <Route path="/admin" element={<AdminPage />} />
+                  </Route>
 
-                <Route element={<ProtectedRoute roles={[3]} />}>
-                  <Route path="/teacher" element={<GerentePage />} />
-                </Route>
+                  <Route element={<ProtectedRoute roles={[3]} />}>
+                    <Route path="/gerente" element={<GerentePage />} />
+                  </Route>
 
-                <Route element={<ProtectedRoute roles={[4]} />}>
-                  <Route path="/student" element={<AuditorPage />} />
-                </Route>
+                  <Route element={<ProtectedRoute roles={[4]} />}>
+                    <Route path="/auditor" element={<AuditorPage />} />
+                  </Route>
 
-                <Route element={<ProtectedRoute roles={[5]} />}>
-                  <Route path="/student" element={<JefeContadorPage />} />
-                </Route>
+                  <Route element={<ProtectedRoute roles={[5]} />}>
+                    <Route path="/jefe-contador" element={<JefeContadorPage />} />
+                  </Route>
 
-                <Route element={<ProtectedRoute roles={[6]} />}>
-                  <Route path="/student" element={<ContadorPage />} />
-                </Route>
-              </Routes>
-            </RecoverPasswordProvider>
-          </BrowserRouter>
-        </TokenProvider>
+                  <Route element={<ProtectedRoute roles={[6]} />}>
+                    <Route path="/contador" element={<ContadorPage />} />
+                  </Route>
+                </Routes>
+              </RecoverPasswordProvider>
+            </BrowserRouter>
+          </TokenProvider>
+        </UserProvider>
       </AuthProvider>
       <ToastContainer />
     </>
