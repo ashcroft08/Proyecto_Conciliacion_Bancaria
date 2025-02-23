@@ -68,13 +68,6 @@ export const registerAuditor = async (req, res) => {
     try {
         const { nombres, apellidos, email, password, confirmPassword, cod_rol, fecha_expiracion } = req.body;
 
-        // Validar que la fecha de expiración no sea anterior a la fecha actual
-        const selectedDate = new Date(fecha_expiracion);
-        const currentDate = new Date();
-        if (selectedDate <= currentDate) {
-            return res.status(400).json(["La fecha de expiración debe ser posterior a la fecha actual"]);
-        }
-
         const codRolNumber = parseInt(cod_rol, 10);
         if (isNaN(codRolNumber)) {
             return res.status(400).json(["Rol inválido"]);
@@ -102,7 +95,7 @@ export const registerAuditor = async (req, res) => {
         // Crear caducidad usando el cod_usuario generado
         const newCaducidad = await createCaducidad({
             cod_usuario: newUser.cod_usuario,
-            fecha_expiracion: selectedDate.toISOString(), // Guardar la fecha en formato ISO
+            fecha_expiracion
         });
 
         res.status(201).json({

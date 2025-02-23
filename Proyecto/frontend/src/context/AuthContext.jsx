@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }) => {
   const signupAuditor = async (user) => {
     try {
       const res = await registerAuditorRequest(user);
+      console.log(res)
       if (res.status === 201) {
         //console.log("Usuario registrado exitosamente");
         return true; // Indicar éxito

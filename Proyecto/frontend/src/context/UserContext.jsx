@@ -2,9 +2,11 @@ import { createContext, useContext, useState } from "react";
 import {
   getUsersAdminRequest,
   getUserContadorRequest,
-  getUserAuditoresRequest,
+  getUsersAuditoresRequest,
+  getUserAuditorRequest,
   getUserRequest,
   updateUserRequest,
+  updateUserAuditorRequest,
   deleteUserRequest,
   updatePasswordRequest,
 } from "../api/user";
@@ -44,11 +46,31 @@ export function UserProvider({ children }) {
 
   const getUsersAuditores = async () => {
     try {
-      const res = await getUserAuditoresRequest();
-      //console.log("Usuarios obtenidos:", res.data); // Agrega este log
-      setUsers(res.data);
+      const res = await getUsersAuditoresRequest();
+      const formattedUsers = res.data.map((user) => ({
+        ...user,
+        fecha_expiracion: user.Caducidads[0]?.fecha_expiracion || "No definida",
+      }));
+      setUsers(formattedUsers);
     } catch (error) {
-      console.error("Error fetching contador users:", error);
+      console.error("Error fetching auditor users:", error);
+    }
+  };
+
+  const getUserAuditor = async (cod_usuario) => {
+    try {
+      const res = await getUserAuditorRequest(cod_usuario);
+      const user = res.data[0]; // Accede al primer elemento del array
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      return {
+        ...user,
+        fecha_expiracion: user.Caducidads[0]?.fecha_expiracion || "No definida",
+      };
+    } catch (error) {
+      console.error(error);
+      throw error; // Lanza el error para manejarlo en la vista
     }
   };
 
@@ -95,6 +117,21 @@ export function UserProvider({ children }) {
     }
   };
 
+  const updateUserAuditor = async (cod_usuario, user) => {
+    try {
+      const res = await updateUserAuditorRequest(cod_usuario, user);
+      if (res.status === 200) {
+        // Cambia esto a 200 si es el código correcto
+        return true; // Indicar éxito
+      }
+      return false; // Indicar fallo
+    } catch (error) {
+      console.error(error.response.data);
+      setErrors(error.response.data); // Cambia esto para que sea un array
+      return false; // Indicar fallo
+    }
+  };
+
   const updatePassword = async (cod_usuario, user) => {
     try {
       const res = await updatePasswordRequest(cod_usuario, user);
@@ -116,8 +153,10 @@ export function UserProvider({ children }) {
         getUsersAdmin,
         getUsersContadores,
         getUsersAuditores,
+        getUserAuditor,
         getUser,
         updateUser,
+        updateUserAuditor,
         deleteUser,
         updatePassword,
         errors,

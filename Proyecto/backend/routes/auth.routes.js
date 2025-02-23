@@ -11,13 +11,14 @@ import {
 } from "../controllers/auth.controller.js"; // Asegúrate de que esté definida en el controlador
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { loginSchema, registerSchema } from "../schemas/auth.schema.js";
+import { caducidadSchema } from "../schemas/caducidad.schema.js";
 import { loginLimiter } from '../middlewares/rateLimiters.js';
 
 const router = Router();
 
 router.post("/register", validateSchema(registerSchema), register);
 
-router.post("/register-auditor", validateSchema(registerSchema), registerAuditor);
+router.post("/register-auditor", validateSchema(caducidadSchema), registerAuditor);
 
 router.post("/login", validateSchema(loginSchema), loginLimiter, login);
 

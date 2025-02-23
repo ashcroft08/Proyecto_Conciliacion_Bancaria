@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
-import { registerAuditorSchema, editSchema } from "../schemas/auth";
+import { caducidadSchema, editSchema } from "../schemas/caducidad";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DataTable from "react-data-table-component";
 import "@coreui/coreui/dist/css/coreui.min.css";
@@ -26,7 +26,13 @@ import { ToastContainer } from "react-toastify";
 import CustomToast from "./ui/CustomToast";
 
 export const RegisterAuditor = () => {
-  const { users, getUsersAuditores, updateUser, deleteUser } = useUser();
+  const {
+    users,
+    getUsersAuditores,
+    getUserAuditor,
+    updateUserAuditor,
+    deleteUser,
+  } = useUser();
   const [records, setRecords] = useState([]);
   const [visible, setVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
@@ -69,18 +75,18 @@ export const RegisterAuditor = () => {
     handleSubmit,
     formState: { errors }, // Renombrar para evitar confusión
     reset,
-  } = useForm({ resolver: zodResolver(registerAuditorSchema) });
+  } = useForm({ resolver: zodResolver(caducidadSchema) });
 
   const { signupAuditor, errors: registerErrors } = useAuth(); // Obtén los errores
 
   const onSubmit = async (values) => {
-    console.log("Datos enviados:", values);
+    console.log("Datos enviados:", values); // Verifica que los datos sean correctos
     const success = await signupAuditor(values);
     if (success) {
       CustomToast("¡Auditor registrado exitosamente!", "success");
-      setVisible(false); // Cierra el modal
-      await getUsersAuditores(); // Actualiza la lista de usuarios después de registrar uno nuevo
-      reset(); // Limpia el formulario después de un registro exitoso
+      setVisible(false);
+      await getUsersAuditores();
+      reset();
     } else {
       console.log("Error al registrar usuario.");
     }
@@ -110,7 +116,8 @@ export const RegisterAuditor = () => {
   // Manejar edición
   const handleEdit = async (user) => {
     try {
-      const userData = await getUsersAuditores(user.cod_usuario);
+      const userData = await getUserAuditor(user.cod_usuario);
+      console.log("Datos del usuario a editar:", userData); // Verifica los datos
       setEditUser(userData);
       setEditVisible(true);
     } catch (error) {
@@ -121,7 +128,7 @@ export const RegisterAuditor = () => {
   // Enviar edición
   const onSubmitEdit = async (values) => {
     try {
-      const success = await updateUser(editUser.cod_usuario, values);
+      const success = await updateUserAuditor(editUser.cod_usuario, values);
       if (success) {
         CustomToast("¡Auditor actualizado exitosamente!", "success");
         setEditVisible(false);
@@ -325,7 +332,7 @@ export const RegisterAuditor = () => {
                 />
                 {errors.fecha_expiracion && (
                   <p className="text-red-500">
-                    La fecha de expiración es obligatoria
+                    {errors.fecha_expiracion.message}
                   </p>
                 )}
               </div>
@@ -381,7 +388,7 @@ export const RegisterAuditor = () => {
                 <input
                   type="hidden"
                   id="cod_rol"
-                  value="6"
+                  value="4"
                   {...register("cod_rol", {
                     required: "El rol es obligatorio",
                   })}
