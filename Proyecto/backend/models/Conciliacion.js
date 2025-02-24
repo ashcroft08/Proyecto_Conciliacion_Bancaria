@@ -7,6 +7,14 @@ export const Conciliacion = sequelize.define('Conciliacion', {
         primaryKey: true,
         autoIncrement: true
     },
+    cod_periodo: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'periodo', // Hace referencia directamente al modelo Rol
+            key: 'cod_periodo', // Clave referenciada
+        },
+    },
     cod_transaccion: {
         type: DataTypes.INTEGER,
         allowNull: false,

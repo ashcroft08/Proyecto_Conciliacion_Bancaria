@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
-import { loginRequest, registerRequest, verifyTokenRequest } from "../api/auth";
+import {
+  loginRequest,
+  registerRequest,
+  registerAuditorRequest,
+  verifyTokenRequest,
+} from "../api/auth";
 import Cookies from "js-cookie";
 
 const AuthContext = createContext();
@@ -42,6 +47,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const signupAuditor = async (user) => {
+    try {
+      const res = await registerAuditorRequest(user);
+      console.log(res)
+      if (res.status === 201) {
+        //console.log("Usuario registrado exitosamente");
+        return true; // Indicar éxito
+      }
+      return false; // Indicar fallo
+    } catch (error) {
+      console.log(error.response.data);
+      setErrors(error.response.data); // Cambia esto para que sea un array
+      return false; // Indicar fallo
+    }
+  };
+
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
@@ -49,8 +70,10 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
     } catch (error) {
       console.log(error);
-      if (error.code === 'ERR_NETWORK') {
-        setErrors(["No se pudo conectar al servidor. Por favor, inténtelo de nuevo más tarde."]);
+      if (error.code === "ERR_NETWORK") {
+        setErrors([
+          "No se pudo conectar al servidor. Por favor, inténtelo de nuevo más tarde.",
+        ]);
       } else {
         setErrors(error.response?.data?.message || ["Error desconocido"]);
       }
@@ -92,6 +115,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         signup,
+        signupAuditor,
         signin,
         logout,
         isAuthenticated,

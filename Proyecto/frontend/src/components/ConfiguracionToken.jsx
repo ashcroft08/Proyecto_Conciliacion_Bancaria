@@ -6,13 +6,16 @@ import { CForm, CFormInput, CFormLabel, CButton, CAlert } from "@coreui/react";
 import { z } from "zod"; // Importar Zod
 
 // Esquema de validación con Zod
-const expiresInSchema = z.string().refine((value) => {
-  // Validar que el valor sea un número seguido de 'h', 'd' o 'm'
-  const regex = /^\d+[hdm]$/;
-  return regex.test(value);
-}, {
-  message: "Formato inválido. Usa '1h', '2d' o '30m'.",
-});
+const expiresInSchema = z.string().refine(
+  (value) => {
+    // Validar que el valor sea un número seguido de 'h', 'd' o 'm'
+    const regex = /^\d+[hdm]$/;
+    return regex.test(value);
+  },
+  {
+    message: "Formato inválido. Usa '1h', '2d' o '30m'.",
+  }
+);
 
 export function ConfiguracionToken() {
   const {
@@ -62,8 +65,10 @@ export function ConfiguracionToken() {
 
   return (
     <>
+      <h1 className="mb-4 text-xl md:text-2xl font-bold text-center">
+        CONFIGURACIÓN TOKEN
+      </h1>
       <div className="p-4 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-4">Configuración del Token</h1>
         <CForm onSubmit={handleSubmit}>
           <div className="mb-4">
             <CFormLabel className="block text-sm font-medium text-gray-700">
@@ -77,7 +82,9 @@ export function ConfiguracionToken() {
               placeholder="Ejemplo: 1h, 2d, 30m"
             />
             <p className="text-sm text-gray-500 mt-2">
-              Ingresa el tiempo de expiración en formato de horas (h), días (d) o minutos (m). Ejemplo: 1h para 1 hora, 2d para 2 días, 30m para 30 minutos.
+              Ingresa el tiempo de expiración en formato de horas (h), días (d)
+              o minutos (m). Ejemplo: 1h para 1 hora, 2d para 2 días, 30m para
+              30 minutos.
             </p>
           </div>
           <CButton

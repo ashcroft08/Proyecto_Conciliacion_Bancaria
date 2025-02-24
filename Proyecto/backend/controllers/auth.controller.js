@@ -6,6 +6,7 @@ import { sendEmail } from '../utils/mailer.js';
 import crypto from 'crypto';
 import {
     createUsuario,
+    createCaducidad,
     findUsuarioByEmail,
     findUsuarioById,
     countUsuariosByRol,
@@ -32,6 +33,13 @@ export const register = async (req, res) => {
             if (adminCount >= 3) return res.status(400).json(["Límite de administradores alcanzado"]);
         }
 
+        // Buscar usuario por email
+        const userFound = await findUsuarioByEmail(email);
+        if (userFound) {
+            console.log('Correo ya registrado:', email);
+            return res.status(400).json(["Correo ya registrado"]);
+        }
+
         // Crear nuevo usuario
         const newUser = await createUsuario({
             cod_rol: codRolNumber,
@@ -51,6 +59,78 @@ export const register = async (req, res) => {
             updatedAt: newUser.updatedAt,
         });
 
+        // Enviar las credenciales por correo electrónico
+        const message = `
+            <p>Hola ${nombres} ${apellidos},</p>
+            <p>¡Bienvenido a nuestra plataforma!</p>
+            <p>Esta plataforma te facilitará la organización de tus actividades, el acceso a información del curso y de la escuela, compartir tus fotografías y la comunicación con tus compañeros.</p>
+            <p>Para actualizar tu contraseña desde la plataforma, ingresa a tu perfil y actualiza tus datos.</p>
+            <p>Tus credenciales para ingresar a la plataforma son:</p>
+            <p><strong>Correo electrónico:</strong> ${email}</p>
+            <p><strong>Contraseña:</strong> ${password}</p>
+        `;
+        await sendEmail(email, "Bienvenido a la Plataforma", message);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const registerAuditor = async (req, res) => {
+    try {
+        const { nombres, apellidos, email, password, confirmPassword, cod_rol, fecha_expiracion } = req.body;
+
+        const codRolNumber = parseInt(cod_rol, 10);
+        if (isNaN(codRolNumber)) {
+            return res.status(400).json(["Rol inválido"]);
+        }
+
+        if (password !== confirmPassword) {
+            return res.status(400).json(["Las contraseñas no coinciden"]);
+        }
+
+        // Buscar usuario por email
+        const userFound = await findUsuarioByEmail(email);
+        if (userFound) {
+            return res.status(400).json(["Correo ya registrado"]);
+        }
+
+        // Crear nuevo usuario
+        const newUser = await createUsuario({
+            cod_rol: codRolNumber,
+            nombres,
+            apellidos,
+            email,
+            password,
+        });
+
+        // Crear caducidad usando el cod_usuario generado
+        const newCaducidad = await createCaducidad({
+            cod_usuario: newUser.cod_usuario,
+            fecha_expiracion
+        });
+
+        res.status(201).json({
+            cod_usuario: newUser.cod_usuario,
+            cod_rol: newUser.cod_rol,
+            nombres: newUser.nombres,
+            apellidos: newUser.apellidos,
+            email: newUser.email,
+            fecha_expiracion: newCaducidad.fecha_expiracion,
+            createdAt: newUser.createdAt,
+            updatedAt: newUser.updatedAt,
+        });
+        // Enviar las credenciales por correo electrónico
+        const message = `
+            <p>Hola ${nombres} ${apellidos},</p>
+            <p>¡Bienvenido a nuestra plataforma!</p>
+            <p>Esta plataforma te facilitará la organización de tus actividades, el acceso a información del curso y de la escuela, compartir tus fotografías y la comunicación con tus compañeros.</p>
+            <p>Para actualizar tu contraseña desde la plataforma, ingresa a tu perfil y actualiza tus datos.</p>
+            <p>Tus credenciales para ingresar a la plataforma son:</p>
+            <p><strong>Correo electrónico:</strong> ${email}</p>
+            <p><strong>Contraseña:</strong> ${password}</p>
+        `;
+        await sendEmail(email, "Bienvenido a la Plataforma", message);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -268,6 +348,12 @@ export const resetPassword = async (req, res) => {
         // Validar la nueva contraseña
         if (newPassword.length < 8) {
             return res.status(400).json({ message: "La contraseña debe tener al menos 8 caracteres" });
+        }
+
+        // Verificar si la nueva contraseña es igual a la actual
+        const isSamePassword = await bcrypt.compare(newPassword, user.password);
+        if (isSamePassword) {
+            res.status(400).json({ message: "La nueva contraseña no puede ser igual a la actual" });
         }
 
         // Encriptar la nueva contraseña

@@ -5,49 +5,71 @@ export const createTransaccionSchema = z.object({
     nro_cuenta: z.string({
         required_error: "El número de cuenta es requerido",
         invalid_type_error: "El número de cuenta debe ser un texto",
-    }).min(1, {
-        message: "El número de cuenta no puede estar vacío",
-    }),
-    description: z.string({
+    })
+        .min(1, { message: "El número de cuenta no puede estar vacío" })
+        .regex(/^\d+$/, { message: "El número de cuenta debe contener solo números" })
+    ,
+    descripcion: z.string({
         required_error: "La descripción es requerida",
         invalid_type_error: "La descripción debe ser un texto",
     }).min(1, {
         message: "La descripción no puede estar vacía",
     }),
-    valor: z.number({
-        required_error: "El valor es requerido",
-        invalid_type_error: "El valor debe ser un número",
-    }).positive({
-        message: "El valor debe ser un número positivo",
+    debe: z.number({
+        required_error: "El debe es requerido",
+        invalid_type_error: "El debe debería ser un número",
+    }).min(0, {
+        message: "El debe debe ser un número mayor o igual a 0",
     }),
-    saldos: z.number({
+    haber: z.number({
+        required_error: "El haber es requerido",
+        invalid_type_error: "El haber debe ser un número",
+    }).min(0, {
+        message: "El haber debe ser un número mayor o igual a 0",
+    }),
+    saldo: z.number({
         required_error: "El saldo es requerido",
         invalid_type_error: "El saldo debe ser un número",
-    }).positive({
-        message: "El saldo debe ser un número positivo",
+    }).min(0, {
+        message: "El saldo debe ser un número mayor o igual a 0",
     }),
 });
 
 // Esquema para actualizar una transacción
 export const updateTransaccionSchema = z.object({
     nro_cuenta: z.string({
+        required_error: "El número de cuenta es requerido",
         invalid_type_error: "El número de cuenta debe ser un texto",
-    }).min(1, {
-        message: "El número de cuenta no puede estar vacío",
-    }).optional(),
-    description: z.string({
+    })
+        .min(1, { message: "El número de cuenta no puede estar vacío" })
+        .regex(/^\d+$/, { message: "El número de cuenta debe contener solo números" })
+        .optional(),
+    descripcion: z.string({
         invalid_type_error: "La descripción debe ser un texto",
     }).min(1, {
         message: "La descripción no puede estar vacía",
     }).optional(),
-    valor: z.number({
-        invalid_type_error: "El valor debe ser un número",
-    }).positive({
-        message: "El valor debe ser un número positivo",
-    }).optional(),
-    saldos: z.number({
+    debe: z.number({
+        invalid_type_error: "El debe debería ser un número",
+    })
+        .min(0, {
+            message: "El debe debe ser un número mayor o igual a 0",
+        })
+        .optional(),  // Hace que el campo sea opcional
+
+    haber: z.number({
+        invalid_type_error: "El haber debe ser un número",
+    })
+        .min(0, {
+            message: "El haber debe ser un número mayor o igual a 0",
+        })
+        .optional(),  // Hace que el campo sea opcional
+
+    saldo: z.number({
         invalid_type_error: "El saldo debe ser un número",
-    }).positive({
-        message: "El saldo debe ser un número positivo",
-    }).optional(),
+    })
+        .min(0, {
+            message: "El saldo debe ser un número mayor o igual a 0",
+        })
+        .optional(),  // Hace que el campo sea opcional
 });

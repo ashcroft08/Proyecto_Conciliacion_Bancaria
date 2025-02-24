@@ -208,6 +208,9 @@ export const RegisterContador = () => {
 
   return (
     <>
+      <h1 className="mb-4 text-xl md:text-2xl font-bold text-center">
+        CONTADORES
+      </h1>
       <CCard>
         <CCardHeader>
           <div className="d-flex justify-content-end mt-1">

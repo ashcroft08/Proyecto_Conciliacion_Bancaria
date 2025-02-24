@@ -95,3 +95,19 @@ export const passwordSchema = z.object({
             });
         }
     });
+
+export const registerAuditorSchema = z.object({
+    nombres: z.string().min(1, "Los nombres son obligatorios"),
+    apellidos: z.string().min(1, "Los apellidos son obligatorios"),
+    email: z.string().email("El correo electrónico no es válido"),
+    password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+    confirmPassword: z.string().min(8, "La confirmación de contraseña es obligatoria"),
+    cod_rol: z.number().int().min(2).max(6, "Rol inválido"),
+    fecha_expiracion: z.string().refine((value) => {
+        const date = new Date(value);
+        return !isNaN(date.getTime()) && date > new Date();
+    }, "La fecha de expiración debe ser válida y posterior a la fecha actual"),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+});

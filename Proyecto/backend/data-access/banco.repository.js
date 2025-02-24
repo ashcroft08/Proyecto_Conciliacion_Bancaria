@@ -15,3 +15,7 @@ export const createMultipleBancos = async (bancosData) => {
 export const getAllBancos = async () => {
     return await Banco.findAll();
 };
+
+export const findAllBancosById = async (cod_periodo) => {
+    return await Banco.findAll({ where: { cod_periodo } });
+}

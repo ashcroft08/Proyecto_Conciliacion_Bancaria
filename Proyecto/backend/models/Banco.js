@@ -7,6 +7,14 @@ export const Banco = sequelize.define('Banco', {
         primaryKey: true,
         autoIncrement: true
     },
+    cod_periodo: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'periodo', // Hace referencia directamente al modelo Rol
+            key: 'cod_periodo', // Clave referenciada
+        },
+    },
     nro_cuenta: {
         type: DataTypes.STRING,
         allowNull: false
@@ -15,11 +23,15 @@ export const Banco = sequelize.define('Banco', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    valor: {
+    debe: {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    saldos: {
+    haber: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    saldo: {
         type: DataTypes.FLOAT,
         allowNull: false
     }

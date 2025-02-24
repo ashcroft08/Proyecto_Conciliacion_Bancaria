@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
     createTransaccionController,
+    getAllTransaccionByIdController,
     getTransaccionByIdController,
-    getAllTransaccionesController,
     updateTransaccionController,
     deleteTransaccionController,
 } from "../controllers/transaccion.controller.js";
@@ -11,19 +11,19 @@ import { createTransaccionSchema, updateTransaccionSchema } from "../schemas/tra
 
 const router = Router();
 
-// Ruta para crear una transacción
-router.post("/transacciones", validateSchema(createTransaccionSchema), createTransaccionController);
-
-// Ruta para obtener una transacción por ID
-router.get("/transacciones/:cod_transaccion", getTransaccionByIdController);
+//Ruta para crear una transaccion
+router.post("/transaccion", validateSchema(createTransaccionSchema), createTransaccionController)
 
 // Ruta para obtener todas las transacciones
-router.get("/transacciones", getAllTransaccionesController);
+router.get("/transacciones/:cod_periodo", getAllTransaccionByIdController);
 
-// Ruta para actualizar una transacción
-router.put("/transacciones/:cod_transaccion", validateSchema(updateTransaccionSchema), updateTransaccionController);
+// Ruta para obtener una transaccion
+router.get("/transaccion/:cod_transaccion", getTransaccionByIdController);
+
+// Ruta para actualizar una transaccion
+router.put("/transaccion/:cod_transaccion", validateSchema(updateTransaccionSchema), updateTransaccionController);
 
 // Ruta para eliminar una transacción
-router.delete("/transacciones/:cod_transaccion", deleteTransaccionController);
+router.delete("/transaccion/:cod_transaccion", deleteTransaccionController);
 
 export default router;
