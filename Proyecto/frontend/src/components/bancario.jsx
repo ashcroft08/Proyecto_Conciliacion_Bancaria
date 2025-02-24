@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ImportBankStatement = () => {
+export const ExtractosBancarios = () => {
   const [file, setFile] = useState(null);
 
   const handleFileChange = (e) => {
@@ -40,4 +40,4 @@ const ImportBankStatement = () => {
   );
 };
 
-export default ImportBankStatement;
+export default ExtractosBancarios;

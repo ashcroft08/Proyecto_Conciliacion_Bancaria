@@ -1,8 +1,24 @@
 // controllers/banco.controller.js
-import { createMultipleBancos } from '../data-access/banco.repository.js';
+import { createMultipleBancos, findAllBancosById } from '../data-access/banco.repository.js';
 import csv from 'csv-parser';
 import ExcelJS from 'exceljs'; // Reemplaza xlsx con exceljs
 import fs from 'fs';
+
+export const getAllBancosByIdController = async (req, res) => {
+    try {
+        const { cod_periodo } = req.params;
+        console.log("cod_periodo:", cod_periodo); // Depuración
+        const bancos = await findAllBancosById(cod_periodo);
+        console.log("bancos:", bancos); // Depuración
+        if (bancos) {
+            res.status(200).json(bancos);
+        } else {
+            res.status(404).json({ message: "Transacciones no encontrada" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 // Función para procesar archivos CSV
 const processCSV = (filePath) => {

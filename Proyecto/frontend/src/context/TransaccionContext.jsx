@@ -1,11 +1,11 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import {
   transaccionRequest,
   getAllTransaccionRequest,
   getTransaccionRequest,
   updateTransaccionRequest,
   deleteTransaccionRequest,
-} from "../api/transaccion"; // Asegúrate de que la ruta sea correcta
+} from "../api/transaccion";
 
 const TransaccionContext = createContext();
 
@@ -17,20 +17,17 @@ export const useTransaccion = () => {
 };
 
 export function TransaccionProvider({ children }) {
-  const [transaccion, setTransaccion] = useState([]);
+  const [transacciones, setTransacciones] = useState([]);
   const [errors, setErrors] = useState([]);
 
-  // Función para manejar errores
   const handleErrors = (error) => {
     setErrors(error.response?.data?.message || ["Error desconocido"]);
   };
 
-  //------------------- Creacion Transaccion --------------------------------
-
   const createTransaccion = async (transaccionData) => {
     try {
       const res = await transaccionRequest(transaccionData);
-      setTransaccion([...transaccion, res.data]);
+      setTransacciones([...transacciones, res.data]);
       setErrors([]);
       return res.data;
     } catch (error) {
@@ -38,10 +35,20 @@ export function TransaccionProvider({ children }) {
     }
   };
 
-  const getTransacciones = async () => {
+  const getTransaccionesByPeriodo = useCallback(async (cod_periodo) => {
     try {
-      const res = await getAllTransaccionRequest();
-      setTransaccion(res.data);
+      const res = await getAllTransaccionRequest(cod_periodo);
+      setTransacciones(res.data);
+      setErrors([]);
+      return res.data;
+    } catch (error) {
+      handleErrors(error);
+    }
+  }, []);
+
+  const getTransaccionById = async (cod_transaccion) => {
+    try {
+      const res = await getTransaccionRequest(cod_transaccion);
       setErrors([]);
       return res.data;
     } catch (error) {
@@ -49,28 +56,12 @@ export function TransaccionProvider({ children }) {
     }
   };
 
-  const getTransaccionById = async (cod_creacion_transaccion) => {
+  const updateTransaccion = async (cod_transaccion, transaccionData) => {
     try {
-      const res = await getTransaccionRequest(cod_creacion_transaccion);
-      setErrors([]);
-      return res.data;
-    } catch (error) {
-      handleErrors(error);
-    }
-  };
-
-  const updateTransaccion = async (
-    cod_creacion_transaccion,
-    transaccionData
-  ) => {
-    try {
-      const res = await updateTransaccionRequest(
-        cod_creacion_transaccion,
-        transaccionData
-      );
-      setTransaccion(
-        transaccion.map((t) =>
-          t.cod_creacion_transaccion === cod_creacion_transaccion ? res.data : t
+      const res = await updateTransaccionRequest(cod_transaccion, transaccionData);
+      setTransacciones(
+        transacciones.map((t) =>
+          t.cod_transaccion === cod_transaccion ? res.data : t
         )
       );
       setErrors([]);
@@ -80,13 +71,11 @@ export function TransaccionProvider({ children }) {
     }
   };
 
-  const deleteTransaccion = async (cod_creacion_transaccion) => {
+  const deleteTransaccion = async (cod_transaccion) => {
     try {
-      await deleteTransaccionRequest(cod_creacion_transaccion);
-      setTransaccion(
-        transaccion.filter(
-          (t) => t.cod_creacion_transaccion !== cod_creacion_transaccion
-        )
+      await deleteTransaccionRequest(cod_transaccion);
+      setTransacciones(
+        transacciones.filter((t) => t.cod_transaccion !== cod_transaccion)
       );
       setErrors([]);
     } catch (error) {
@@ -97,10 +86,10 @@ export function TransaccionProvider({ children }) {
   return (
     <TransaccionContext.Provider
       value={{
-        transaccion,
+        transacciones,
         errors,
         createTransaccion,
-        getTransacciones,
+        getTransaccionesByPeriodo,
         getTransaccionById,
         updateTransaccion,
         deleteTransaccion,

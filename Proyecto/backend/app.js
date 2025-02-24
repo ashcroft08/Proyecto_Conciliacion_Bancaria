@@ -26,6 +26,6 @@ app.use("/api", userRoutes);
 app.use('/api', configuracionTokenRoutes);
 app.use('/api', periodoRoutes);
 app.use('/api', transaccionRoutes);
-app.use('/api/banco', bancoRoutes);
+app.use('/api', bancoRoutes);
 
 export default app;

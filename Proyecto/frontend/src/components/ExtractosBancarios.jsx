@@ -6,7 +6,7 @@ import { CCard, CCardBody, CCardHeader } from "@coreui/react";
 import { ToastContainer } from "react-toastify";
 import { useBanco } from "../context/BancoContext";
 
-export const Conciliacion = () => {
+export const ExtractosBancarios = () => {
   const { periodos, getPeriodos } = usePeriodo();
   const { bancoTransacciones, getBancoTransaccionesByPeriodo } = useBanco();
 
@@ -100,7 +100,7 @@ export const Conciliacion = () => {
   return (
     <>
       <h1 className="mb-4 text-xl md:text-2xl font-bold text-center">
-        CONCILIACIÓN BANCARIA
+        EXTRACTO BANCARIO
       </h1>
       <CCard>
         <CCardHeader>
@@ -139,7 +139,7 @@ export const Conciliacion = () => {
             data={records}
             pagination
             paginationComponentOptions={paginationComponentOptions}
-            noDataComponent="No hay conciliaciones para mostrar"
+            noDataComponent="No hay transacciones del banco para mostrar"
           />
         </CCardBody>
       </CCard>
@@ -149,4 +149,4 @@ export const Conciliacion = () => {
   );
 };
 
-export default Conciliacion;
+export default ExtractosBancarios;

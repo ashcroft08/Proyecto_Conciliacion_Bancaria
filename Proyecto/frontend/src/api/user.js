@@ -2,6 +2,10 @@ import axios from "./axios";
 
 export const getUsersAdminRequest = () => axios.get("/admins");
 
+export const getGerenteRequest = () => axios.get("/gerente");
+
+export const getJefeContableRequest = () => axios.get("/jefe-contable");
+
 export const getUserContadorRequest = () => axios.get("/contadores");
 
 export const getUsersAuditoresRequest = () => axios.get("/auditores");

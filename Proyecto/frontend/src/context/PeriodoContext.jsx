@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback} from "react";
 import {
   periodoRequest,
   getAllPeriodoRequest,
@@ -42,16 +42,15 @@ export function PeriodoProvider({ children }) {
   };
 
   // Función para obtener todos los períodos
-  const getPeriodos = async () => {
+  const getPeriodos = useCallback(async () => {
     try {
       const res = await getAllPeriodoRequest();
-      setPeriodos(res.data); // Actualiza el estado con la lista de períodos
-      setErrors([]); // Limpia los errores
-      return res.data;
+      setPeriodos(res.data);
+      setErrors([]);
     } catch (error) {
       handleErrors(error);
     }
-  };
+  }, []);
 
   // Función para obtener un período por su ID
   const getPeriodoById = async (cod_periodo) => {

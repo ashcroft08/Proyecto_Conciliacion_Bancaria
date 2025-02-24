@@ -3,7 +3,7 @@ import RetractingSideBarContador from "../components/RetractingSideBarContador";
 import Dashboard from "../components/Dashboard";
 import { LibrosMayores } from "../components/LibrosMayores";
 import EditPerfil from "../components/EditPerfil";
-import ImportBankStatement from "../components/ImportBankStatement";
+import ExtractosBancarios from "../components/ExtractosBancarios";
 import RegisterPeriodo from "../components/RegisterPeriodo";
 import Conciliacion from "../components/Conciliacion";
 
@@ -11,7 +11,7 @@ const componentMap = {
   Dashboard: () => <Dashboard />,
   Periodos: () => <RegisterPeriodo />,
   "Libros mayores": () => <LibrosMayores />,
-  "Extractos Bancarios": () => <ImportBankStatement />,
+  "Extractos Bancarios": () => <ExtractosBancarios />,
   Conciliaciones: () => <Conciliacion />,
   Perfil: () => <EditPerfil />,
   "/": () => <div>Logout</div>,

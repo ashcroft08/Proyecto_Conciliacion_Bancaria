@@ -9,6 +9,8 @@ import {
   updateUserAuditorRequest,
   deleteUserRequest,
   updatePasswordRequest,
+  getJefeContableRequest,
+  getGerenteRequest,
 } from "../api/user";
 import CustomToast from "../components/ui/CustomToast";
 
@@ -31,6 +33,26 @@ export function UserProvider({ children }) {
       setUsers(res.data);
     } catch (error) {
       console.error("Error fetching admin users:", error);
+    }
+  };
+
+  const getUserGerente = async () => {
+    try {
+      const res = await getGerenteRequest();
+      //console.log("Usuarios obtenidos:", res.data); // Agrega este log
+      setUsers(res.data);
+    } catch (error) {
+      console.error("Error fetching gerente user:", error);
+    }
+  };
+
+  const getUserJefeContable = async () => {
+    try {
+      const res = await getJefeContableRequest();
+      //console.log("Usuarios obtenidos:", res.data); // Agrega este log
+      setUsers(res.data);
+    } catch (error) {
+      console.error("Error fetching jefe contable user:", error);
     }
   };
 
@@ -151,6 +173,8 @@ export function UserProvider({ children }) {
       value={{
         users,
         getUsersAdmin,
+        getUserGerente,
+        getUserJefeContable,
         getUsersContadores,
         getUsersAuditores,
         getUserAuditor,

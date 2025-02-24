@@ -95,7 +95,7 @@ function EditPerfil() {
   return (
     <>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 className="mb-6 text-xl md:text-2xl font-bold text-center">
+        <h1 className="mb-4 text-xl md:text-2xl font-bold text-center">
           PERFIL
         </h1>
 
