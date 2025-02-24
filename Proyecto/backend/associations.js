@@ -9,6 +9,7 @@ import { ConfiguracionToken } from './models/ConfiguracionToken.js';
 import { RecoverPassword } from './models/RecoverPassword.js';
 import { RevisionAutomatizada } from './models/RevisionAutomatizada.js';
 import { Caducidad } from './models/Caducidad.js';
+import { Periodo } from './models/Periodo.js';
 
 // Importa todos los modelos necesarios...
 
@@ -38,4 +39,16 @@ export const setupAssociations = () => {
 
     Usuario.hasMany(Caducidad, { foreignKey: 'cod_usuario' });
     Caducidad.belongsTo(Usuario, { foreignKey: 'cod_usuario' });
+
+    Estado.hasMany(Periodo, { foreignKey: 'cod_estado' });
+    Periodo.belongsTo(Estado, { foreignKey: 'cod_estado' });
+
+    Periodo.hasMany(Transaccion, { foreignKey: 'cod_periodo' });
+    Transaccion.belongsTo(Periodo, { foreignKey: 'cod_periodo' });
+
+    Periodo.hasMany(Banco, { foreignKey: 'cod_periodo' });
+    Banco.belongsTo(Periodo, { foreignKey: 'cod_periodo' });
+
+    Periodo.hasMany(Conciliacion, { foreignKey: 'cod_periodo' });
+    Conciliacion.belongsTo(Periodo, { foreignKey: 'cod_periodo' });
 };

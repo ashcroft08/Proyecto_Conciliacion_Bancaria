@@ -16,21 +16,21 @@ export const createTransaccionSchema = z.object({
     }),
     debe: z.number({
         required_error: "El debe es requerido",
-        invalid_type_error: "El debe debería ser un número",
-    }).min(0, {
-        message: "El debe debe ser un número mayor o igual a 0",
+        invalid_type_error: "El debe deberia ser un número",
+    }).positive({
+        message: "El debe deberia ser un número positivo",
     }),
     haber: z.number({
         required_error: "El haber es requerido",
         invalid_type_error: "El haber debe ser un número",
-    }).min(0, {
-        message: "El haber debe ser un número mayor o igual a 0",
+    }).positive({
+        message: "El haber debe ser un número positivo",
     }),
     saldo: z.number({
         required_error: "El saldo es requerido",
         invalid_type_error: "El saldo debe ser un número",
-    }).min(0, {
-        message: "El saldo debe ser un número mayor o igual a 0",
+    }).positive({
+        message: "El saldo debe ser un número positivo",
     }),
 });
 
@@ -47,26 +47,18 @@ export const updateTransaccionSchema = z.object({
         message: "La descripción no puede estar vacía",
     }).optional(),
     debe: z.number({
-        invalid_type_error: "El debe debería ser un número",
-    })
-        .min(0, {
-            message: "El debe debe ser un número mayor o igual a 0",
-        })
-        .optional(),  // Hace que el campo sea opcional
-
+        invalid_type_error: "El debe deberia ser un número",
+    }).positive({
+        message: "El debe deberia ser un número positivo",
+    }).optional(),
     haber: z.number({
         invalid_type_error: "El haber debe ser un número",
-    })
-        .min(0, {
-            message: "El haber debe ser un número mayor o igual a 0",
-        })
-        .optional(),  // Hace que el campo sea opcional
-
-    saldo: z.number({
+    }).positive({
+        message: "El haber debe ser un número positivo",
+    }).optional(),
+    saldos: z.number({
         invalid_type_error: "El saldo debe ser un número",
-    })
-        .min(0, {
-            message: "El saldo debe ser un número mayor o igual a 0",
-        })
-        .optional(),  // Hace que el campo sea opcional
+    }).positive({
+        message: "El saldo debe ser un número positivo",
+    }).optional(),
 });

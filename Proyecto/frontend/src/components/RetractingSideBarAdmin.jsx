@@ -13,7 +13,7 @@ import { FaUserTie } from "react-icons/fa";
 import { FaCalculator } from "react-icons/fa";
 import { MdOutlineGeneratingTokens } from "react-icons/md";
 
-const RetractingSideBar = ({ setComponent }) => {
+const RetractingSideBarAdmin = ({ setComponent }) => {
   const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
 
@@ -273,24 +273,83 @@ const Logo = () => {
   return (
     <motion.div
       layout
-      className="grid size-10 shrink-0 place-content-center rounded-md bg-indigo-600"
+      className="grid size-10 shrink-0 place-content-center rounded-md bg-indigo-300"
     >
       <svg
         width="24"
-        height="auto"
-        viewBox="0 0 50 39"
+        height="24" // Cambiado de "auto" a "24"
+        viewBox="0 0 50 50"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="fill-slate-50"
       >
+        <circle cx="25" cy="15" r="7" fill="#2196F3" />
         <path
-          d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
-          stopColor="#000000"
-        ></path>
+          d="M25 25C18.9249 25 14 29.9249 14 36V40H36V36C36 29.9249 31.0751 25 25 25Z"
+          fill="#2196F3"
+        />
+
+        <path d="M35 10H40V15H35V10Z" fill="#FFC107" />
         <path
-          d="M17.4224 27.102L11.4192 36H33.5008L49 13.0271H32.7024L23.2064 27.102H17.4224Z"
-          stopColor="#000000"
-        ></path>
+          d="M37.5 12.5C37.5 13.8807 36.3807 15 35 15C33.6193 15 32.5 13.8807 32.5 12.5C32.5 11.1193 33.6193 10 35 10C36.3807 10 37.5 11.1193 37 .5 12.5Z"
+          fill="#FFC107"
+        />
+        <path
+          d="M35 15V20"
+          stroke="#FFC107"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
+
+        <circle cx="25" cy="25" r="10" fill="#4CAF50" />
+        <path
+          d="M25 15L25 20"
+          stroke="#FFFFFF"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
+        <path
+          d="M25 30L25 35"
+          stroke="#FFFFFF"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
+        <path
+          d="M15 25L20 25"
+          stroke="#FFFFFF"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
+        <path
+          d="M30 25L35 25"
+          stroke="#FFFFFF"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
+        <path
+          d="M18 18L22 22"
+          stroke="#FFFFFF"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
+        <path
+          d="M28 28L32 32"
+          stroke="#FFFFFF"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
+        <path
+          d="M18 32L22 28"
+          stroke="#FFFFFF"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
+        <path
+          d="M28 22L32 18"
+          stroke="#FFFFFF"
+          strokeWidth="2" // Cambiado de stroke-width a strokeWidth
+          strokeLinecap="round" // Cambiado de stroke-linecap a strokeLinecap
+        />
       </svg>
     </motion.div>
   );
@@ -328,4 +387,4 @@ const ToggleClose = ({ open, setOpen }) => {
   );
 };
 
-export default RetractingSideBar;
+export default RetractingSideBarAdmin;

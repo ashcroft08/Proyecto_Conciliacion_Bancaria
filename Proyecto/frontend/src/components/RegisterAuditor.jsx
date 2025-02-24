@@ -204,7 +204,8 @@ export const RegisterAuditor = () => {
       return (
         row.nombres.toLowerCase().includes(query) ||
         row.apellidos.toLowerCase().includes(query) ||
-        row.email.toLowerCase().includes(query)
+        row.email.toLowerCase().includes(query) ||
+        row.fecha_expiracion.toLowerCase().includes(query)
       );
     });
     setRecords(newData);
