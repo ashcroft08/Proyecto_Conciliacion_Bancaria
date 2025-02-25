@@ -4,6 +4,8 @@ import {
     getAllPeriodoController,
     getPeriodoByIdController,
     updatePeriodoController,
+    archivarPeriodoController,
+    desarchivarPeriodoController,
     deletePeriodoController,
 } from "../controllers/periodo.controller.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
@@ -25,5 +27,11 @@ router.put("/periodo/:cod_periodo", validateSchema(updateperiodoSchema), updateP
 
 // Ruta para eliminar un periodo
 router.delete("/periodo/:cod_periodo", deletePeriodoController);
+
+// Ruta para archivar el periodo
+router.put('/periodo/archivar/:cod_periodo', archivarPeriodoController);
+
+// Ruta para desarchivar el periodo
+router.put('/periodo/desarchivar/:cod_periodo', desarchivarPeriodoController);
 
 export default router;

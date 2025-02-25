@@ -20,6 +20,7 @@ import { UserProvider } from "./context/UserContext";
 import { TransaccionProvider } from "./context/TransaccionContext";
 import { PeriodoProvider } from "./context/PeriodoContext";
 import { BancoProvider } from "./context/BancoContext";
+import { ConciliacionProvider } from "./context/ConciliacionContext";
 
 function App() {
   return (
@@ -30,77 +31,82 @@ function App() {
             <PeriodoProvider>
               <TransaccionProvider>
                 <BancoProvider>
-                  <BrowserRouter>
-                    <RecoverPasswordProvider>
-                      <Routes>
-                        {/* Rutas públicas */}
-                        <Route
-                          path="/"
-                          element={
-                            <PublicRoute>
-                              <HomePage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/login"
-                          element={
-                            <PublicRoute>
-                              <LoginPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/recoverpassword"
-                          element={
-                            <PublicRoute>
-                              <RecoverPasswordPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/validate-recovery-code"
-                          element={
-                            <PublicRoute>
-                              <OTPInputPage />
-                            </PublicRoute>
-                          }
-                        />
-                        <Route
-                          path="/reset-password"
-                          element={
-                            <PublicRoute>
-                              <ResetPasswordPage />
-                            </PublicRoute>
-                          }
-                        />
-
-                        {/* Rutas protegidas */}
-                        <Route element={<ProtectedRoute roles={[1, 2]} />}>
-                          <Route path="/admin" element={<AdminPage />} />
-                        </Route>
-
-                        <Route element={<ProtectedRoute roles={[3]} />}>
-                          <Route path="/gerente" element={<GerentePage />} />
-                        </Route>
-
-                        <Route element={<ProtectedRoute roles={[4]} />}>
-                          <Route path="/auditor" element={<AuditorPage />} />
-                        </Route>
-
-                        <Route element={<ProtectedRoute roles={[5]} />}>
+                  <ConciliacionProvider>
+                    <BrowserRouter>
+                      <RecoverPasswordProvider>
+                        <Routes>
+                          {/* Rutas públicas */}
                           <Route
-                            path="/jefe-contador"
-                            element={<JefeContadorPage />}
+                            path="/"
+                            element={
+                              <PublicRoute>
+                                <HomePage />
+                              </PublicRoute>
+                            }
                           />
-                        </Route>
+                          <Route
+                            path="/login"
+                            element={
+                              <PublicRoute>
+                                <LoginPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/recoverpassword"
+                            element={
+                              <PublicRoute>
+                                <RecoverPasswordPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/validate-recovery-code"
+                            element={
+                              <PublicRoute>
+                                <OTPInputPage />
+                              </PublicRoute>
+                            }
+                          />
+                          <Route
+                            path="/reset-password"
+                            element={
+                              <PublicRoute>
+                                <ResetPasswordPage />
+                              </PublicRoute>
+                            }
+                          />
 
-                        <Route element={<ProtectedRoute roles={[6]} />}>
-                          <Route path="/contador" element={<ContadorPage />} />
-                        </Route>
-                      </Routes>
-                    </RecoverPasswordProvider>
-                  </BrowserRouter>
+                          {/* Rutas protegidas */}
+                          <Route element={<ProtectedRoute roles={[1, 2]} />}>
+                            <Route path="/admin" element={<AdminPage />} />
+                          </Route>
+
+                          <Route element={<ProtectedRoute roles={[3]} />}>
+                            <Route path="/gerente" element={<GerentePage />} />
+                          </Route>
+
+                          <Route element={<ProtectedRoute roles={[4]} />}>
+                            <Route path="/auditor" element={<AuditorPage />} />
+                          </Route>
+
+                          <Route element={<ProtectedRoute roles={[5]} />}>
+                            <Route
+                              path="/jefe-contador"
+                              element={<JefeContadorPage />}
+                            />
+                          </Route>
+
+                          <Route element={<ProtectedRoute roles={[6]} />}>
+                            <Route
+                              path="/contador"
+                              element={<ContadorPage />}
+                            />
+                          </Route>
+                        </Routes>
+                      </RecoverPasswordProvider>
+                    </BrowserRouter>
+                  </ConciliacionProvider>
                 </BancoProvider>
               </TransaccionProvider>
             </PeriodoProvider>

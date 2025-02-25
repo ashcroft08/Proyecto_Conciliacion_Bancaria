@@ -1,100 +1,106 @@
 import { useEffect, useState } from "react";
 import { usePeriodo } from "../context/PeriodoContext";
-import DataTable from "react-data-table-component";
-import "@coreui/coreui/dist/css/coreui.min.css";
-import { CCard, CCardBody, CCardHeader } from "@coreui/react";
-import { ToastContainer } from "react-toastify";
-import { useBanco } from "../context/BancoContext";
+import { useConciliacion } from "../context/ConciliacionContext";
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableBody,
+  CTableDataCell,
+  CBadge,
+  CButton,
+} from "@coreui/react";
+import { ToastContainer, toast } from "react-toastify";
+import { ImWarning } from "react-icons/im"; // Icono para warning
+import { FaCheck } from "react-icons/fa"; // Icono para éxito
+import { RiCloseLargeFill } from "react-icons/ri"; // Icono para peligro
 
 export const Conciliacion = () => {
   const { periodos, getPeriodos } = usePeriodo();
-  const { bancoTransacciones, getBancoTransaccionesByPeriodo } = useBanco();
+  const { conciliaciones, verificarConciliacion, realizarConciliacion } =
+    useConciliacion();
 
   const [records, setRecords] = useState([]);
   const [selectedPeriodo, setSelectedPeriodo] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showRealizarConciliacion, setShowRealizarConciliacion] =
+    useState(false);
 
+  // Obtener los períodos al cargar el componente
   useEffect(() => {
     getPeriodos();
   }, [getPeriodos]);
 
+  // Verificar si hay datos de conciliación cuando se selecciona un período
   useEffect(() => {
     if (selectedPeriodo) {
-      getBancoTransaccionesByPeriodo(selectedPeriodo);
+      verificarConciliacion(selectedPeriodo).then((data) => {
+        if (!data.existeDatos) {
+          setShowRealizarConciliacion(true); // Mostrar opción de realizar conciliación
+        } else {
+          setShowRealizarConciliacion(false);
+          setRecords(data.conciliaciones); // Mostrar las conciliaciones existentes
+        }
+      });
     }
-  }, [selectedPeriodo, getBancoTransaccionesByPeriodo]);
+  }, [selectedPeriodo, verificarConciliacion]);
 
-  useEffect(() => {
-    setRecords(bancoTransacciones);
-  }, [bancoTransacciones]);
-
+  // Filtrar los registros según la búsqueda
   useEffect(() => {
     if (searchQuery) {
-      const newData = bancoTransacciones.filter((row) => {
+      const newData = conciliaciones.filter((row) => {
         return (
           row.nro_cuenta.toLowerCase().includes(searchQuery) ||
           row.descripcion.toLowerCase().includes(searchQuery) ||
-          row.debe.toString().includes(searchQuery) ||
-          row.haber.toString().includes(searchQuery) ||
-          row.saldo.toString().includes(searchQuery)
+          row.banco_debe.toString().includes(searchQuery) ||
+          row.banco_haber.toString().includes(searchQuery) ||
+          row.libro_debe.toString().includes(searchQuery) ||
+          row.libro_haber.toString().includes(searchQuery) ||
+          row.sistema.toString().includes(searchQuery) ||
+          row.auditor.toString().includes(searchQuery)
         );
       });
       setRecords(newData);
     } else {
-      setRecords(bancoTransacciones);
+      setRecords(conciliaciones);
     }
-  }, [bancoTransacciones, searchQuery]);
+  }, [searchQuery, conciliaciones]);
 
-  const columns = [
-    {
-      name: "Número de cuenta",
-      selector: (row) => row.nro_cuenta,
-      sortable: true,
-    },
-    {
-      name: "Descripción",
-      selector: (row) => row.descripcion,
-      sortable: true,
-    },
-    {
-      name: "Debe",
-      selector: (row) => row.debe,
-      sortable: true,
-    },
-    {
-      name: "Haber",
-      selector: (row) => row.haber,
-      sortable: true,
-    },
-    {
-      name: "Saldo",
-      selector: (row) => row.saldo,
-      sortable: true,
-    },
-  ];
+  // Función para realizar la conciliación
+  const handleRealizarConciliacion = async () => {
+    try {
+      // Lógica para obtener las transacciones (puedes obtenerlas de otro contexto o API)
+      const transacciones = []; // Aquí debes obtener las transacciones
+      await realizarConciliacion(selectedPeriodo, transacciones);
+      toast.success("Conciliación realizada exitosamente");
+    } catch (error) {
+      toast.error("Error al realizar la conciliación");
+    }
+  };
 
+  // Función para manejar la búsqueda
   const handleFilter = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const newData = bancoTransacciones.filter((row) => {
+    const newData = conciliaciones.filter((row) => {
       return (
         row.nro_cuenta.toLowerCase().includes(query) ||
         row.descripcion.toLowerCase().includes(query) ||
-        row.debe.toString().includes(query) ||
-        row.haber.toString().includes(query) ||
-        row.saldo.toString().includes(query)
+        row.banco_debe.toString().includes(query) ||
+        row.banco_haber.toString().includes(query) ||
+        row.libro_debe.toString().includes(query) ||
+        row.libro_haber.toString().includes(query) ||
+        row.sistema.toString().includes(query) ||
+        row.auditor.toString().includes(query)
       );
     });
 
     setRecords(newData);
-  };
-
-  const paginationComponentOptions = {
-    rowsPerPageText: "Filas por página:",
-    rangeSeparatorText: "de",
-    selectAllRowsItem: true,
-    selectAllRowsItemText: "Todos",
   };
 
   return (
@@ -119,6 +125,11 @@ export const Conciliacion = () => {
                   </option>
                 ))}
               </select>
+              {showRealizarConciliacion && (
+                <CButton color="primary" onClick={handleRealizarConciliacion}>
+                  Realizar Conciliación
+                </CButton>
+              )}
             </div>
           </div>
         </CCardHeader>
@@ -130,17 +141,149 @@ export const Conciliacion = () => {
                 type="text"
                 onChange={handleFilter}
                 className="form-control"
-                style={{ minWidth: "150px", maxWidth: "250px" }} // Aumenta el ancho aquí
+                style={{ minWidth: "150px", maxWidth: "250px" }}
               />
             </div>
           </div>
-          <DataTable
-            columns={columns}
-            data={records}
-            pagination
-            paginationComponentOptions={paginationComponentOptions}
-            noDataComponent="No hay conciliaciones para mostrar"
-          />
+          <CTable striped bordered responsive>
+            <CTableHead>
+              <CTableRow>
+                <CTableHeaderCell
+                  rowSpan={2}
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Número de cuenta
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  rowSpan={2}
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Descripción
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  colSpan={2}
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Banco
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  colSpan={2}
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Libro
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  rowSpan={2}
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Sistema
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  rowSpan={2}
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Auditor
+                </CTableHeaderCell>
+              </CTableRow>
+              <CTableRow>
+                <CTableHeaderCell
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Debe
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Haber
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Debe
+                </CTableHeaderCell>
+                <CTableHeaderCell
+                  style={{ verticalAlign: "middle", textAlign: "center" }}
+                >
+                  Haber
+                </CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {records.length > 0 ? (
+                records.map((row, index) => (
+                  <CTableRow key={index}>
+                    <CTableDataCell
+                      style={{ verticalAlign: "middle", textAlign: "center" }}
+                    >
+                      {row.nro_cuenta}
+                    </CTableDataCell>
+                    <CTableDataCell
+                      style={{ verticalAlign: "middle", textAlign: "center" }}
+                    >
+                      {row.descripcion}
+                    </CTableDataCell>
+                    <CTableDataCell
+                      style={{ verticalAlign: "middle", textAlign: "center" }}
+                    >
+                      {row.banco_debe}
+                    </CTableDataCell>
+                    <CTableDataCell
+                      style={{ verticalAlign: "middle", textAlign: "center" }}
+                    >
+                      {row.banco_haber}
+                    </CTableDataCell>
+                    <CTableDataCell
+                      style={{ verticalAlign: "middle", textAlign: "center" }}
+                    >
+                      {row.libro_debe}
+                    </CTableDataCell>
+                    <CTableDataCell
+                      style={{ verticalAlign: "middle", textAlign: "center" }}
+                    >
+                      {row.libro_haber}
+                    </CTableDataCell>
+                    <CTableDataCell
+                      style={{ verticalAlign: "middle", textAlign: "center" }}
+                    >
+                      {row.sistema === false ? (
+                        <CBadge color="warning">
+                          <ImWarning />
+                        </CBadge>
+                      ) : (
+                        <CBadge color="success">
+                          <FaCheck />
+                        </CBadge>
+                      )}
+                    </CTableDataCell>
+                    <CTableDataCell
+                      style={{ verticalAlign: "middle", textAlign: "center" }}
+                    >
+                      {row.auditor === null ? (
+                        <CBadge color="info">En proceso</CBadge>
+                      ) : row.auditor === true ? (
+                        <CBadge color="success">
+                          <FaCheck />
+                        </CBadge>
+                      ) : (
+                        <CBadge color="danger">
+                          <RiCloseLargeFill />
+                        </CBadge>
+                      )}
+                    </CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableDataCell
+                    colSpan={7}
+                    style={{ verticalAlign: "middle", textAlign: "center" }}
+                  >
+                    No hay conciliaciones para mostrar
+                  </CTableDataCell>
+                </CTableRow>
+              )}
+            </CTableBody>
+          </CTable>
         </CCardBody>
       </CCard>
 

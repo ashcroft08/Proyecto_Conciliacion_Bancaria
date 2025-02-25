@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { usePeriodo } from "../context/PeriodoContext";
+import { useAuth } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
 import { periodoSchema, updateperiodoSchema } from "../schemas/periodo";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +24,8 @@ import Label from "../components/ui/Label";
 import Input from "../components/ui/Input";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "./ui/CustomToast";
+import { IoArchive } from "react-icons/io5";
+import { RiInboxUnarchiveLine } from "react-icons/ri";
 
 export const RegisterPeriodo = () => {
   const {
@@ -30,11 +33,16 @@ export const RegisterPeriodo = () => {
     getPeriodos,
     getPeriodoById,
     updatePeriodo,
+    archivarPeriodo,
+    desarchivarPeriodo,
     deletePeriodo,
   } = usePeriodo();
+  const { user } = useAuth();
   const [records, setRecords] = useState([]);
   const [visible, setVisible] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
+  const [archiveVisible, setArchiveVisible] = useState(false);
+  const [unarchiveVisible, setUnarchiveVisible] = useState(false);
   const [currentPeriodo, setCurrentPeriodo] = useState(null);
   const hasFetchedPeriodos = useRef(false);
   const [editVisible, setEditVisible] = useState(false);
@@ -145,6 +153,40 @@ export const RegisterPeriodo = () => {
     setDeleteVisible(false);
   };
 
+  //Archivar
+  const handleArchivar = (periodo) => {
+    setCurrentPeriodo(periodo);
+    setArchiveVisible(true);
+  };
+
+  const handleConfirmArchivar = async () => {
+    const success = await archivarPeriodo(currentPeriodo.cod_periodo); // Esperar a que deletePeriodo se complete
+    if (success) {
+      // Solo mostrar el mensaje de éxito si la eliminación fue exitosa
+      CustomToast("¡Periodo archivado exitosamente!", "success");
+      setArchiveVisible(false);
+      await getPeriodos();
+    }
+    setArchiveVisible(false);
+  };
+
+  //Desarchivar
+  const handleDesarchivar = (periodo) => {
+    setCurrentPeriodo(periodo);
+    setUnarchiveVisible(true);
+  };
+
+  const handleConfirmDesarchivar = async () => {
+    const success = await desarchivarPeriodo(currentPeriodo.cod_periodo); // Esperar a que deletePeriodo se complete
+    if (success) {
+      // Solo mostrar el mensaje de éxito si la eliminación fue exitosa
+      CustomToast("¡Periodo desarchivado exitosamente!", "success");
+      setUnarchiveVisible(false);
+      await getPeriodos();
+    }
+    setUnarchiveVisible(false);
+  };
+
   const columns = [
     {
       name: "Nombre del periodo",
@@ -172,9 +214,27 @@ export const RegisterPeriodo = () => {
           >
             <FaEdit />
           </CButton>
-          <CButton color="danger" onClick={() => handleDelete(row)}>
+          <CButton
+            color="danger"
+            className="me-2"
+            onClick={() => handleDelete(row)}
+          >
             <FaTrash />
           </CButton>
+          {user?.cod_rol === 3 && ( // Usa && para condicionalmente renderizar
+            <CButton
+              color="primary"
+              className="me-2"
+              onClick={() => handleArchivar(row)}
+            >
+              <IoArchive />
+            </CButton>
+          )}
+          {user?.cod_rol === 3 && (
+            <CButton color="info" onClick={() => handleDesarchivar(row)}>
+              <RiInboxUnarchiveLine />
+            </CButton>
+          )}
         </div>
       ),
     },
@@ -201,6 +261,9 @@ export const RegisterPeriodo = () => {
 
   return (
     <>
+      <h1 className="mb-4 text-xl md:text-2xl font-bold text-center">
+        PERIODOS CONTABLES
+      </h1>
       <CCard>
         <CCardHeader>
           <div className="d-flex justify-content-end mt-1">
@@ -349,7 +412,9 @@ export const RegisterPeriodo = () => {
                   validation={{ required: true }}
                 />
                 {editErrors.fecha_inicio && (
-                  <p className="text-red-500">{editErrors.fecha_inicio.message}</p>
+                  <p className="text-red-500">
+                    {editErrors.fecha_inicio.message}
+                  </p>
                 )}
               </div>
               <div className="mt-2">
@@ -402,6 +467,67 @@ export const RegisterPeriodo = () => {
             </CButton>
             <CButton color="danger" onClick={handleConfirmDelete}>
               Eliminar
+            </CButton>
+          </CModalFooter>
+        </CModal>
+
+        {/* Modal para confirmar archivado */}
+        <CModal
+          backdrop="static"
+          alignment="center"
+          visible={archiveVisible}
+          onClose={() => setArchiveVisible(false)}
+          aria-labelledby="archivePeriodo Modal"
+        >
+          <CModalHeader>
+            <CModalTitle id="archivePeriodo Modal" className="fw-bold">
+              Confirmar Archivado
+            </CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <p>
+              ¿Estás seguro de que deseas archivar a{" "}
+              {currentPeriodo?.nombre_periodo}?
+            </p>
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setArchiveVisible(false)}>
+              Cancelar
+            </CButton>
+            <CButton color="primary" onClick={handleConfirmArchivar}>
+              Archivar
+            </CButton>
+          </CModalFooter>
+        </CModal>
+
+        {/* Modal para confirmar desarchivado */}
+        <CModal
+          backdrop="static"
+          alignment="center"
+          visible={unarchiveVisible}
+          onClose={() => setUnarchiveVisible(false)}
+          aria-labelledby="archivePeriodo Modal"
+        >
+          <CModalHeader>
+            <CModalTitle id="archivePeriodo Modal" className="fw-bold">
+              Confirmar Archivado
+            </CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <p>
+              ¿Estás seguro de que deseas desarchivar a{" "}
+              {currentPeriodo?.nombre_periodo}?
+            </p>
+          </CModalBody>
+          <CModalFooter>
+            <CButton
+              color="secondary"
+              onClick={() => setUnarchiveVisible(false)}
+            >
+              Cancelar
+            </CButton>
+            <CButton color="primary" onClick={handleConfirmDesarchivar}>
+              Desarchivar
             </CButton>
           </CModalFooter>
         </CModal>

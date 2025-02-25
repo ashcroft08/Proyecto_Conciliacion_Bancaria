@@ -1,9 +1,11 @@
-import { createContext, useContext, useState, useCallback} from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import {
   periodoRequest,
   getAllPeriodoRequest,
   getPeriodoRequest,
   updatePeriodoRequest,
+  archivarPeriodoRequest,
+  desarchivarPeriodoRequest,
   deletePeriodoRequest,
 } from "../api/periodo"; // Asegúrate de que la ruta sea correcta
 
@@ -11,8 +13,9 @@ const PeriodoContext = createContext();
 
 export const usePeriodo = () => {
   const context = useContext(PeriodoContext);
-  if (!context)
+  if (!context) {
     throw new Error("usePeriodo must be used within a PeriodoProvider");
+  }
   return context;
 };
 
@@ -45,7 +48,7 @@ export function PeriodoProvider({ children }) {
   const getPeriodos = useCallback(async () => {
     try {
       const res = await getAllPeriodoRequest();
-      setPeriodos(res.data);
+      setPeriodos(Array.isArray(res.data) ? res.data : [res.data]); // Asegúrate de que sea un array
       setErrors([]);
     } catch (error) {
       handleErrors(error);
@@ -88,6 +91,28 @@ export function PeriodoProvider({ children }) {
     }
   };
 
+  const archivarPeriodo = useCallback(async (cod_periodo) => {
+    try {
+      const res = await archivarPeriodoRequest(cod_periodo);
+      setPeriodos(Array.isArray(res.data) ? res.data : [res.data]); // Asegúrate de que sea un array
+      setErrors([]);
+      return res.data;
+    } catch (error) {
+      handleErrors(error);
+    }
+  }, []);
+
+  const desarchivarPeriodo = useCallback(async (cod_periodo) => {
+    try {
+      const res = await desarchivarPeriodoRequest(cod_periodo);
+      setPeriodos(Array.isArray(res.data) ? res.data : [res.data]); // Asegúrate de que sea un array
+      setErrors([]);
+      return res.data;
+    } catch (error) {
+      handleErrors(error);
+    }
+  }, []);
+
   return (
     <PeriodoContext.Provider
       value={{
@@ -97,6 +122,8 @@ export function PeriodoProvider({ children }) {
         getPeriodos,
         getPeriodoById,
         updatePeriodo,
+        archivarPeriodo,
+        desarchivarPeriodo,
         deletePeriodo,
       }}
     >
