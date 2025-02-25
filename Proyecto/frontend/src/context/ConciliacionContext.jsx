@@ -1,7 +1,8 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import {
   verificarConciliacionRequest,
   realizarConciliacionRequest,
+  actualizarConciliacionRequest,
 } from "../api/conciliacion";
 
 const ConciliacionContext = createContext();
@@ -18,28 +19,52 @@ export const useConciliacion = () => {
 export const ConciliacionProvider = ({ children }) => {
   const [conciliaciones, setConciliaciones] = useState([]);
 
-  const verificarConciliacion = async (cod_periodo) => {
+  // Verificar si hay conciliaciones para un período
+  const verificarConciliacion = useCallback(async (cod_periodo) => {
     try {
       const res = await verificarConciliacionRequest(cod_periodo);
+      if (res.data.existeDatos) {
+        setConciliaciones(res.data.conciliaciones);
+      }
       return res.data;
     } catch (error) {
-      console.error(error);
+      console.error("Error al verificar conciliación:", error);
+      throw error;
     }
-  };
+  }, []);
 
-  const realizarConciliacion = async (cod_periodo, transacciones) => {
+  // Realizar una nueva conciliación
+  const realizarConciliacion = async (cod_periodo) => {
     try {
-      const res = await realizarConciliacionRequest(cod_periodo, transacciones);
+      const res = await realizarConciliacionRequest(cod_periodo);
       setConciliaciones(res.data.nuevaConciliacion);
       return res.data;
     } catch (error) {
-      console.error(error);
+      console.error("Error al realizar conciliación:", error);
+      throw error;
+    }
+  };
+
+  // Actualizar una conciliación existente
+  const actualizarConciliacion = async (cod_periodo) => {
+    try {
+      const res = await actualizarConciliacionRequest(cod_periodo);
+      setConciliaciones(res.data.nuevaConciliacion);
+      return res.data;
+    } catch (error) {
+      console.error("Error al actualizar conciliación:", error);
+      throw error;
     }
   };
 
   return (
     <ConciliacionContext.Provider
-      value={{ conciliaciones, verificarConciliacion, realizarConciliacion }}
+      value={{
+        conciliaciones,
+        verificarConciliacion,
+        realizarConciliacion,
+        actualizarConciliacion,
+      }}
     >
       {children}
     </ConciliacionContext.Provider>

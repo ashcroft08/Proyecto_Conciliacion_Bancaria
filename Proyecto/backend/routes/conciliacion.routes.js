@@ -1,12 +1,19 @@
-import { Router } from 'express';
-import { verificarConciliacion, realizarConciliacion } from '../controllers/conciliacion.controller.js';
+import express from "express";
+import {
+    getConciliacionesByPeriodo,
+    createConciliacionController,
+    updateConciliacionController
+} from "../controllers/conciliacion.controller.js";
 
-const router = Router();
+const router = express.Router();
 
-// Ruta para verificar si hay datos de conciliación
-router.get('/conciliacion/verificar/:cod_periodo', verificarConciliacion);
+// Obtener conciliaciones por periodo
+router.get("/conciliacion/verificar/:cod_periodo", getConciliacionesByPeriodo);
 
-// Ruta para realizar una nueva conciliación
-router.post('/conciliacion/realizar/:cod_periodo', realizarConciliacion);
+// Realizar conciliación para un periodo
+router.post("/conciliacion/realizar/:cod_periodo", createConciliacionController);
+
+// Actualizar conciliación
+router.put("/conciliacion/actualizar/:cod_periodo", updateConciliacionController);
 
 export default router;

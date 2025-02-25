@@ -1,53 +1,68 @@
 // data-access/conciliacion.repository.js
-import { sequelize } from '../database/database.js'; // Asegúrate de que la ruta sea correcta
+import { sequelize } from "../database/database.js";
 import { Conciliacion } from '../models/Conciliacion.js';
 import { Banco } from '../models/Banco.js';
 import { Transaccion } from '../models/Transaccion.js';
-import { Periodo } from '../models/Periodo.js';
+import { RevisionAutomatizada } from "../models/RevisionAutomatizada.js";
+import { Estado } from "../models/Estado.js";
 
-// Buscar conciliaciones por período
+// Obtener conciliaciones por período
 export const findAllConciliacionesByPeriodo = async (cod_periodo) => {
     return await Conciliacion.findAll({ where: { cod_periodo } });
 };
 
 // Crear una nueva conciliación
-export const createConciliacion = async (cod_periodo) => {
-    try {
-        // Realizar la consulta para obtener los datos de transacciones y banco
-        const resultados = await Transaccion.findAll({
-            attributes: ['cod_transaccion', 'debe', 'haber'],
-            include: [{
-                model: Banco,
-                attributes: ['cod_transaccion_banco', 'debe', 'haber'],
-                where: { cod_periodo },
-                required: false, // LEFT JOIN
-                include: [{
-                    model: Periodo,
-                    attributes: [], // No necesitas seleccionar columnas de Periodo
-                    where: { cod_periodo }
-                }]
-            }],
-            where: { cod_periodo }
+export const createConciliacion = async (cod_periodo, transaccionesLibro, transaccionesBanco, estadoInicial, revisionAutomaticaMatch, revisionAutomaticaNoMatch, transaction) => {
+    const nuevasConciliaciones = [];
+
+    // Conciliar transacciones del libro
+    for (const transaccion of transaccionesLibro) {
+        const match = transaccionesBanco.find(
+            (t) =>
+                t.nro_cuenta === transaccion.nro_cuenta &&
+                t.debe === transaccion.debe &&
+                t.haber === transaccion.haber
+        );
+
+        nuevasConciliaciones.push({
+            cod_periodo,
+            cod_transaccion: transaccion.cod_transaccion,
+            cod_transaccion_banco: match ? match.cod_transaccion_banco : null,
+            cod_revision_automatizada: match
+                ? revisionAutomaticaMatch.cod_revision_automatizada
+                : revisionAutomaticaNoMatch.cod_revision_automatizada,
+            cod_estado: estadoInicial.cod_estado,
         });
-
-        // Mapear los resultados para insertarlos en la tabla Conciliacion
-        const datosConciliacion = resultados.map((transaccion) => {
-            const banco = transaccion.Banco; // Datos de la tabla Banco (puede ser null por el LEFT JOIN)
-
-            return {
-                cod_periodo,
-                cod_transaccion: transaccion.cod_transaccion,
-                cod_transaccion_banco: banco ? banco.cod_transaccion_banco : null,
-                cod_revision_automatizada: (banco && banco.debe === transaccion.debe && banco.haber === transaccion.haber) ? 1 : 2,
-                cod_revision: null, // Se llena con null
-                cod_estado: 1 // Se llena con 1
-            };
-        });
-
-        // Insertar los datos en la tabla Conciliacion
-        const nuevasConciliaciones = await Conciliacion.bulkCreate(datosConciliacion);
-        return nuevasConciliaciones;
-    } catch (error) {
-        throw new Error(`Error al realizar la conciliación: ${error.message}`);
     }
+
+    // Conciliar transacciones solo del banco
+    for (const transaccion of transaccionesBanco) {
+        const match = transaccionesLibro.find(
+            (t) =>
+                t.nro_cuenta === transaccion.nro_cuenta &&
+                t.debe === transaccion.debe &&
+                t.haber === transaccion.haber
+        );
+
+        if (!match) {
+            nuevasConciliaciones.push({
+                cod_periodo,
+                cod_transaccion: null,
+                cod_transaccion_banco: transaccion.cod_transaccion_banco,
+                cod_revision_automatizada: revisionAutomaticaNoMatch.cod_revision_automatizada,
+                cod_estado: estadoInicial.cod_estado,
+            });
+        }
+    }
+
+    await Conciliacion.bulkCreate(nuevasConciliaciones, { transaction });
+};
+
+// Actualizar conciliación
+export const updateConciliacion = async (cod_periodo, transaccionesLibro, transaccionesBanco, estadoInicial, revisionAutomaticaMatch, revisionAutomaticaNoMatch, transaction) => {
+    // Eliminar conciliaciones existentes para este período
+    await Conciliacion.destroy({ where: { cod_periodo }, transaction });
+
+    // Crear nuevas conciliaciones
+    await createConciliacion(cod_periodo, transaccionesLibro, transaccionesBanco, estadoInicial, revisionAutomaticaMatch, revisionAutomaticaNoMatch, transaction);
 };
