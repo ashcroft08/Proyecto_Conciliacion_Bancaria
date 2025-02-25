@@ -167,7 +167,19 @@ export const LibrosMayores = () => {
       selector: (row) => row.saldo,
       sortable: true,
     },
-    {
+  ];
+
+  // Verifica el estado del periodo seleccionado
+  const estadoPeriodo = periodos.find(
+    (periodo) => periodo.cod_periodo === Number(selectedPeriodo)
+  )?.cod_estado;
+
+  //console.log("selectedPeriodo:", selectedPeriodo);
+  //console.log("estadoPeriodo:", estadoPeriodo);
+  //console.log("periodos:", periodos);
+
+  if (estadoPeriodo === 1) {
+    columns.push({
       name: "Acciones",
       cell: (row) => (
         <div>
@@ -183,8 +195,8 @@ export const LibrosMayores = () => {
           </CButton>
         </div>
       ),
-    },
-  ];
+    });
+  }
 
   const handleFilter = (event) => {
     const query = event.target.value.toLowerCase();
@@ -216,23 +228,26 @@ export const LibrosMayores = () => {
         LIBRO MAYOR
       </h1>
       <CCard>
-        <CCardHeader>
-          <div className="d-flex justify-content-end mt-1">
-            <CInputGroup>
-              <CInputGroupText>
-                <FaPlus />
-              </CInputGroupText>
-              <CButton
-                color="success"
-                style={{ color: "white" }}
-                onClick={() => setVisible(true)}
-                className="fw-bold"
-              >
-                Agregar nueva transacción
-              </CButton>
-            </CInputGroup>
-          </div>
-        </CCardHeader>
+        {estadoPeriodo === 1 && (
+          <CCardHeader>
+            <div className="d-flex justify-content-end mt-1">
+              <CInputGroup>
+                <CInputGroupText>
+                  <FaPlus />
+                </CInputGroupText>
+
+                <CButton
+                  color="success"
+                  style={{ color: "white" }}
+                  onClick={() => setVisible(true)}
+                  className="fw-bold"
+                >
+                  Agregar nueva transacción
+                </CButton>
+              </CInputGroup>
+            </div>
+          </CCardHeader>
+        )}
         <CCardBody>
           <div className="mb-6 flex items-center space-x-4">
             <h3 className="text-lg font-semibold text-gray-700">Periodos</h3>

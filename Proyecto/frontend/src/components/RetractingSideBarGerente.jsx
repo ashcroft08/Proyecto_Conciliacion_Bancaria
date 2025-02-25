@@ -11,7 +11,7 @@ import { HiOutlineBanknotes } from "react-icons/hi2";
 import { BsBank } from "react-icons/bs";
 import { AiOutlineReconciliation } from "react-icons/ai";
 
-const RetractingSideBarContador = ({ setComponent }) => {
+const RetractingSideBarGerente = ({ setComponent }) => {
   const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
 
@@ -213,7 +213,7 @@ const TitleSection = ({ open, user, logout, setSelected }) => {
               </span>
 
               <span className="block text-xs text-slate-500">
-                {user?.cod_rol === 6 && "Contador"}
+                {user?.cod_rol === 3 && "Gerente"}
               </span>
             </motion.div>
           )}
@@ -326,4 +326,4 @@ const ToggleClose = ({ open, setOpen }) => {
   );
 };
 
-export default RetractingSideBarContador;
+export default RetractingSideBarGerente;

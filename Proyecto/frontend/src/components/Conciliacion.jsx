@@ -105,6 +105,11 @@ export const Conciliacion = () => {
     setSearchQuery(query);
   };
 
+  // Verifica el estado del periodo seleccionado
+  const estadoPeriodo = periodos.find(
+    (periodo) => periodo.cod_periodo === Number(selectedPeriodo)
+  )?.cod_estado;
+
   return (
     <CCard>
       <CCardHeader>CONCILIACIÓN BANCARIA</CCardHeader>
@@ -135,7 +140,7 @@ export const Conciliacion = () => {
             Realizar Conciliación
           </CButton>
         )}
-        {showActualizarConciliacion && (
+        {showActualizarConciliacion && estadoPeriodo === 1 &&(
           <CButton color="success" onClick={handleActualizarConciliacion}>
             Actualizar Conciliación
           </CButton>

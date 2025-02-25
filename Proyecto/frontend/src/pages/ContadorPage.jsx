@@ -8,7 +8,7 @@ import RegisterPeriodo from "../components/RegisterPeriodo";
 import Conciliacion from "../components/Conciliacion";
 
 const componentMap = {
-  Dashboard: () => <Dashboard />,
+  //Dashboard: () => <Dashboard />,
   Periodos: () => <RegisterPeriodo />,
   "Libros mayores": () => <LibrosMayores />,
   "Extractos Bancarios": () => <ExtractosBancarios />,

@@ -206,7 +206,8 @@ export const RegisterPeriodo = () => {
     {
       name: "Acciones",
       cell: (row) => (
-        <div>
+        <>
+          {/* Botón de Editar */}
           <CButton
             color="warning"
             className="me-2"
@@ -214,6 +215,8 @@ export const RegisterPeriodo = () => {
           >
             <FaEdit />
           </CButton>
+
+          {/* Botón de Eliminar */}
           <CButton
             color="danger"
             className="me-2"
@@ -221,7 +224,9 @@ export const RegisterPeriodo = () => {
           >
             <FaTrash />
           </CButton>
-          {user?.cod_rol === 3 && ( // Usa && para condicionalmente renderizar
+
+          {/* Botón de Archivar/Desarchivar según cod_estado */}
+          {user?.cod_rol === 3 && row.cod_estado === 1 && (
             <CButton
               color="primary"
               className="me-2"
@@ -230,12 +235,13 @@ export const RegisterPeriodo = () => {
               <IoArchive />
             </CButton>
           )}
-          {user?.cod_rol === 3 && (
+
+          {user?.cod_rol === 3 && row.cod_estado === 2 && (
             <CButton color="info" onClick={() => handleDesarchivar(row)}>
               <RiInboxUnarchiveLine />
             </CButton>
           )}
-        </div>
+        </>
       ),
     },
   ];
