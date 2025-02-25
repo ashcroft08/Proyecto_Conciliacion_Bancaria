@@ -60,7 +60,7 @@ export const register = async (req, res) => {
         });
 
         // Enviar las credenciales por correo electrónico
-        const message = `
+        /*const message = `
             <p>Hola ${nombres} ${apellidos},</p>
             <p>¡Bienvenido a nuestra plataforma!</p>
             <p>Esta plataforma te facilitará la organización de tus actividades, el acceso a información del curso y de la escuela, compartir tus fotografías y la comunicación con tus compañeros.</p>
@@ -69,7 +69,7 @@ export const register = async (req, res) => {
             <p><strong>Correo electrónico:</strong> ${email}</p>
             <p><strong>Contraseña:</strong> ${password}</p>
         `;
-        await sendEmail(email, "Bienvenido a la Plataforma", message);
+        await sendEmail(email, "Bienvenido a la Plataforma", message);*/
 
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -121,7 +121,7 @@ export const registerAuditor = async (req, res) => {
             updatedAt: newUser.updatedAt,
         });
         // Enviar las credenciales por correo electrónico
-        const message = `
+        /*const message = `
             <p>Hola ${nombres} ${apellidos},</p>
             <p>¡Bienvenido a nuestra plataforma!</p>
             <p>Esta plataforma te facilitará la organización de tus actividades, el acceso a información del curso y de la escuela, compartir tus fotografías y la comunicación con tus compañeros.</p>
@@ -130,7 +130,7 @@ export const registerAuditor = async (req, res) => {
             <p><strong>Correo electrónico:</strong> ${email}</p>
             <p><strong>Contraseña:</strong> ${password}</p>
         `;
-        await sendEmail(email, "Bienvenido a la Plataforma", message);
+        await sendEmail(email, "Bienvenido a la Plataforma", message);*/
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

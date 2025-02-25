@@ -27,6 +27,7 @@ import Input from "../components/ui/Input";
 import { ToastContainer } from "react-toastify";
 import CustomToast from "./ui/CustomToast";
 import { useTransaccion } from "../context/TransaccionContext";
+import "../css/table.css";
 
 export const LibrosMayores = () => {
   const { periodos, getPeriodos } = usePeriodo();
@@ -211,7 +212,9 @@ export const LibrosMayores = () => {
 
   return (
     <>
-      <h1 className="mb-4 text-xl md:text-2xl font-bold text-center">LIBRO MAYOR</h1>
+      <h1 className="mb-4 text-xl md:text-2xl font-bold text-center">
+        LIBRO MAYOR
+      </h1>
       <CCard>
         <CCardHeader>
           <div className="d-flex justify-content-end mt-1">
@@ -265,6 +268,23 @@ export const LibrosMayores = () => {
             pagination
             paginationComponentOptions={paginationComponentOptions}
             noDataComponent="No hay transacciones para mostrar"
+            style={{
+              border: "1px solid #ddd", // Borde de la tabla
+            }}
+            customStyles={{
+              cells: {
+                style: {
+                  border: "1px solid #ddd", // Borde de las celdas
+                  padding: "8px", // Espaciado interno
+                },
+              },
+              headCells: {
+                style: {
+                  backgroundColor: "#f2f2f2", // Fondo del encabezado
+                  border: "1px solid #ddd", // Borde del encabezado
+                },
+              },
+            }}
           />
         </CCardBody>
       </CCard>

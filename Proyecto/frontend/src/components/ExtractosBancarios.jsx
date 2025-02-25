@@ -2,17 +2,33 @@ import { useEffect, useState } from "react";
 import { usePeriodo } from "../context/PeriodoContext";
 import DataTable from "react-data-table-component";
 import "@coreui/coreui/dist/css/coreui.min.css";
-import { CCard, CCardBody, CCardHeader } from "@coreui/react";
-import { ToastContainer } from "react-toastify";
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CButton,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
+} from "@coreui/react";
+import { ToastContainer, toast } from "react-toastify";
 import { useBanco } from "../context/BancoContext";
 
 export const ExtractosBancarios = () => {
   const { periodos, getPeriodos } = usePeriodo();
-  const { bancoTransacciones, getBancoTransaccionesByPeriodo } = useBanco();
+  const {
+    bancoTransacciones,
+    getBancoTransaccionesByPeriodo,
+    uploadBancoTransacciones,
+  } = useBanco();
 
   const [records, setRecords] = useState([]);
   const [selectedPeriodo, setSelectedPeriodo] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     getPeriodos();
@@ -44,6 +60,29 @@ export const ExtractosBancarios = () => {
       setRecords(bancoTransacciones);
     }
   }, [bancoTransacciones, searchQuery]);
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleImport = async () => {
+    if (!file) {
+      toast.error("Por favor, selecciona un archivo.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      await uploadBancoTransacciones(selectedPeriodo, formData);
+      toast.success("Datos importados exitosamente.");
+      setShowImportModal(false);
+      getBancoTransaccionesByPeriodo(selectedPeriodo);
+    } catch (error) {
+      toast.error("Error al importar los datos.");
+    }
+  };
 
   const columns = [
     {
@@ -119,6 +158,14 @@ export const ExtractosBancarios = () => {
                   </option>
                 ))}
               </select>
+              {selectedPeriodo && bancoTransacciones.length === 0 && (
+                <CButton
+                  color="primary"
+                  onClick={() => setShowImportModal(true)}
+                >
+                  Importar Datos
+                </CButton>
+              )}
             </div>
           </div>
         </CCardHeader>
@@ -130,7 +177,7 @@ export const ExtractosBancarios = () => {
                 type="text"
                 onChange={handleFilter}
                 className="form-control"
-                style={{ minWidth: "150px", maxWidth: "250px" }} // Aumenta el ancho aquí
+                style={{ minWidth: "150px", maxWidth: "250px" }}
               />
             </div>
           </div>
@@ -140,9 +187,46 @@ export const ExtractosBancarios = () => {
             pagination
             paginationComponentOptions={paginationComponentOptions}
             noDataComponent="No hay transacciones del banco para mostrar"
+            style={{
+              border: "1px solid #ddd", // Borde de la tabla
+            }}
+            customStyles={{
+              cells: {
+                style: {
+                  border: "1px solid #ddd", // Borde de las celdas
+                  padding: "8px", // Espaciado interno
+                },
+              },
+              headCells: {
+                style: {
+                  backgroundColor: "#f2f2f2", // Fondo del encabezado
+                  border: "1px solid #ddd", // Borde del encabezado
+                },
+              },
+            }}
           />
         </CCardBody>
       </CCard>
+
+      <CModal
+        visible={showImportModal}
+        onClose={() => setShowImportModal(false)}
+      >
+        <CModalHeader>
+          <CModalTitle>Importar Datos</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <input type="file" onChange={handleFileChange} accept=".xlsx, .csv" />
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setShowImportModal(false)}>
+            Cancelar
+          </CButton>
+          <CButton color="primary" onClick={handleImport}>
+            Importar
+          </CButton>
+        </CModalFooter>
+      </CModal>
 
       <ToastContainer />
     </>

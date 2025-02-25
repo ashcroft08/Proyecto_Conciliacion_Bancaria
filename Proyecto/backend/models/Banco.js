@@ -19,7 +19,7 @@ export const Banco = sequelize.define('Banco', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    description: {
+    descripcion: {
         type: DataTypes.STRING,
         allowNull: false
     },

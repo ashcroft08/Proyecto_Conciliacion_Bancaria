@@ -9,6 +9,7 @@ import configuracionTokenRoutes from './routes/token.routes.js';
 import periodoRoutes from "./routes/periodo.routes.js"
 import transaccionRoutes from './routes/transaccion.routes.js';
 import bancoRoutes from './routes/banco.routes.js';
+import conciliacionRoutes from "./routes/conciliacion.routes.js"
 
 const app = express();
 
@@ -27,5 +28,6 @@ app.use('/api', configuracionTokenRoutes);
 app.use('/api', periodoRoutes);
 app.use('/api', transaccionRoutes);
 app.use('/api', bancoRoutes);
+app.use('/api', conciliacionRoutes);
 
 export default app;

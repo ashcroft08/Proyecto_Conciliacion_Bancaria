@@ -1,5 +1,8 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { getAllBancoTransaccionRequest } from "../api/banco";
+import {
+  getAllBancoTransaccionRequest,
+  uploadBancoTransaccionesRequest,
+} from "../api/banco";
 
 const BancoContext = createContext();
 
@@ -28,9 +31,30 @@ export function BancoProvider({ children }) {
     }
   }, []);
 
+  const uploadBancoTransacciones = useCallback(
+    async (cod_periodo, formData) => {
+      try {
+        const res = await uploadBancoTransaccionesRequest(
+          cod_periodo,
+          formData
+        );
+        setErrors([]);
+        return res.data;
+      } catch (error) {
+        handleErrors(error);
+      }
+    },
+    []
+  );
+
   return (
     <BancoContext.Provider
-      value={{ bancoTransacciones, errors, getBancoTransaccionesByPeriodo }}
+      value={{
+        bancoTransacciones,
+        errors,
+        getBancoTransaccionesByPeriodo,
+        uploadBancoTransacciones,
+      }}
     >
       {children}
     </BancoContext.Provider>

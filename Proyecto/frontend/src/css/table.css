@@ -1,0 +1,13 @@
+.custom-table {
+    border: 1px solid #ddd; /* Borde de la tabla */
+  }
+  
+  .custom-table th,
+  .custom-table td {
+    border: 1px solid #ddd; /* Borde de las celdas */
+    padding: 8px; /* Espaciado interno */
+  }
+  
+  .custom-table th {
+    background-color: #f2f2f2; /* Fondo del encabezado */
+  }
