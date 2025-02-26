@@ -4,7 +4,7 @@ export const createPeriodoController = async (req, res) => {
     try {
         const { nombre_periodo, fecha_inicio, fecha_fin } = req.body;
         const newCreacionPeriodo = await createPeriodo({
-            cod_estado: 2,
+            cod_estado: 1,
             nombre_periodo,
             fecha_inicio,
             fecha_fin,

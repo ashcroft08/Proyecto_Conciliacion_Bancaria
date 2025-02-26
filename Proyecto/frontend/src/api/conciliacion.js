@@ -8,4 +8,4 @@ export const realizarConciliacionRequest = (cod_periodo) =>
     axios.post('/conciliacion/realizar', { cod_periodo });
 
 export const actualizarConciliacionRequest = (cod_periodo) =>
-    axios.put('/conciliacion/actualizar', { cod_periodo });
+    axios.put(`/conciliacion/actualizar/${cod_periodo}`, { cod_periodo });

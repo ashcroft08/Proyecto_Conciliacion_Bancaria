@@ -11,7 +11,7 @@ import { HiOutlineBanknotes } from "react-icons/hi2";
 import { BsBank } from "react-icons/bs";
 import { AiOutlineReconciliation } from "react-icons/ai";
 
-const RetractingSideBarContador = ({ setComponent }) => {
+const RetractingSideBarJefeContador = ({ setComponent }) => {
   const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
 
@@ -46,27 +46,6 @@ const RetractingSideBarContador = ({ setComponent }) => {
           setSelected={handleComponentChange}
           open={open}
         />*/}
-        <Option
-          Icon={LuCalendarClock}
-          title="Periodos"
-          selected={selected}
-          setSelected={handleComponentChange}
-          open={open}
-        />
-        <Option
-          Icon={HiOutlineBanknotes}
-          title="Libros mayores"
-          selected={selected}
-          setSelected={handleComponentChange}
-          open={open}
-        />
-        <Option
-          Icon={BsBank}
-          title="Extractos Bancarios"
-          selected={selected}
-          setSelected={handleComponentChange}
-          open={open}
-        />
         <Option
           Icon={AiOutlineReconciliation}
           title="Conciliaciones"
@@ -213,7 +192,7 @@ const TitleSection = ({ open, user, logout, setSelected }) => {
               </span>
 
               <span className="block text-xs text-slate-500">
-                {user?.cod_rol === 6 && "Contador"}
+                {user?.cod_rol === 5 && "Jefe contable"}
               </span>
             </motion.div>
           )}
@@ -326,4 +305,4 @@ const ToggleClose = ({ open, setOpen }) => {
   );
 };
 
-export default RetractingSideBarContador;
+export default RetractingSideBarJefeContador;
