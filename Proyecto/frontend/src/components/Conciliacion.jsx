@@ -111,113 +111,126 @@ export const Conciliacion = () => {
   )?.cod_estado;
 
   return (
-    <CCard>
-      <CCardHeader>CONCILIACIÓN BANCARIA</CCardHeader>
-      <CCardBody>
-        {/* Selector de período */}
-        <div className="flex items-center space-x-4">
-          <h3 className="text-lg font-semibold text-gray-700">Periodos</h3>
-          <div className="flex items-center space-x-2">
-            <select
-              id="periodo"
-              className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
-              value={selectedPeriodo}
-              onChange={(e) => setSelectedPeriodo(e.target.value)}
-            >
-              <option value="">-- Selecciona un periodo --</option>
-              {periodos.map((periodo) => (
-                <option key={periodo.cod_periodo} value={periodo.cod_periodo}>
-                  {periodo.nombre_periodo}
-                </option>
-              ))}
-            </select>
+    <div>
+      <h1 className="mb-4 text-xl md:text-2xl font-bold text-center">
+        CONCILIACIÓN
+      </h1>
+      <CCard>
+        <CCardBody>
+          {/* Selector de período */}
+          <div className="flex items-center space-x-4">
+            <h3 className="text-lg font-semibold text-gray-700">Periodos</h3>
+            <div className="flex items-center space-x-2">
+              <select
+                id="periodo"
+                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                value={selectedPeriodo}
+                onChange={(e) => setSelectedPeriodo(e.target.value)}
+              >
+                <option value="">-- Selecciona un periodo --</option>
+                {periodos.map((periodo) => (
+                  <option key={periodo.cod_periodo} value={periodo.cod_periodo}>
+                    {periodo.nombre_periodo}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
 
-        {/* Botones de acción */}
-        {showRealizarConciliacion && (
-          <CButton color="primary" onClick={handleRealizarConciliacion}>
-            Realizar Conciliación
-          </CButton>
-        )}
-        {showActualizarConciliacion && estadoPeriodo === 1 &&(
-          <CButton color="success" onClick={handleActualizarConciliacion}>
-            Actualizar Conciliación
-          </CButton>
-        )}
-
-        {/* Barra de búsqueda */}
-        <div className="d-flex justify-content-end mb-2">
-          <div className="input-group" style={{ width: "auto" }}>
-            <span className="input-group-text">Buscar:</span>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleFilter}
-              className="form-control"
-              style={{ minWidth: "150px", maxWidth: "250px" }}
-            />
+          {/* Botones de acción */}
+          {showRealizarConciliacion && (
+            <CButton color="primary" onClick={handleRealizarConciliacion}>
+              Realizar Conciliación
+            </CButton>
+          )}
+          {showActualizarConciliacion && estadoPeriodo === 1 && (
+            <CButton color="success" onClick={handleActualizarConciliacion}>
+              Actualizar Conciliación
+            </CButton>
+          )}
+          {showActualizarConciliacion && estadoPeriodo === 2 && (
+            <CButton color="success" onClick={handleActualizarConciliacion}>
+              Aprobar Conciliación
+            </CButton>
+          )}
+          {showActualizarConciliacion && estadoPeriodo === 2 && (
+            <CButton color="danger" onClick={handleActualizarConciliacion}>
+              Reprobar Conciliación
+            </CButton>
+          )}
+          {/* Barra de búsqueda */}
+          <div className="d-flex justify-content-end mb-2">
+            <div className="input-group" style={{ width: "auto" }}>
+              <span className="input-group-text">Buscar:</span>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleFilter}
+                className="form-control"
+                style={{ minWidth: "150px", maxWidth: "250px" }}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Tabla de conciliaciones */}
-        <CTable striped hover responsive>
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell>Número de cuenta</CTableHeaderCell>
-              <CTableHeaderCell>Descripción</CTableHeaderCell>
-              <CTableHeaderCell>Banco Debe</CTableHeaderCell>
-              <CTableHeaderCell>Banco Haber</CTableHeaderCell>
-              <CTableHeaderCell>Libro Debe</CTableHeaderCell>
-              <CTableHeaderCell>Libro Haber</CTableHeaderCell>
-              <CTableHeaderCell>Sistema</CTableHeaderCell>
-              <CTableHeaderCell>Auditor</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {records.length > 0 ? (
-              records.map((row, index) => (
-                <CTableRow key={index}>
-                  <CTableDataCell>{row.nro_cuenta}</CTableDataCell>
-                  <CTableDataCell>{row.descripcion}</CTableDataCell>
-                  <CTableDataCell>{row.banco_debe}</CTableDataCell>
-                  <CTableDataCell>{row.banco_haber}</CTableDataCell>
-                  <CTableDataCell>{row.libro_debe}</CTableDataCell>
-                  <CTableDataCell>{row.libro_haber}</CTableDataCell>
-                  <CTableDataCell>
-                    {row.sistema === false ? (
-                      <CBadge color="success">
-                        <FaCheck />
-                      </CBadge>
-                    ) : (
-                      <CBadge color="warning">
-                        <IoMdInformationCircleOutline />
-                      </CBadge>
-                    )}
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    {row.auditor === null ? (
-                      <CBadge color="info">En proceso</CBadge>
-                    ) : row.auditor === true ? (
-                      <CBadge color="success">Aprobado</CBadge>
-                    ) : (
-                      <CBadge color="danger">Rechazado</CBadge>
-                    )}
+          {/* Tabla de conciliaciones */}
+          <CTable striped hover responsive>
+            <CTableHead>
+              <CTableRow>
+                <CTableHeaderCell>Número de cuenta</CTableHeaderCell>
+                <CTableHeaderCell>Descripción</CTableHeaderCell>
+                <CTableHeaderCell>Banco Debe</CTableHeaderCell>
+                <CTableHeaderCell>Banco Haber</CTableHeaderCell>
+                <CTableHeaderCell>Libro Debe</CTableHeaderCell>
+                <CTableHeaderCell>Libro Haber</CTableHeaderCell>
+                <CTableHeaderCell>Sistema</CTableHeaderCell>
+                <CTableHeaderCell>Auditor</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {records.length > 0 ? (
+                records.map((row, index) => (
+                  <CTableRow key={index}>
+                    <CTableDataCell>{row.nro_cuenta}</CTableDataCell>
+                    <CTableDataCell>{row.descripcion}</CTableDataCell>
+                    <CTableDataCell>{row.banco_debe}</CTableDataCell>
+                    <CTableDataCell>{row.banco_haber}</CTableDataCell>
+                    <CTableDataCell>{row.libro_debe}</CTableDataCell>
+                    <CTableDataCell>{row.libro_haber}</CTableDataCell>
+                    <CTableDataCell>
+                      {row.sistema === false ? (
+                        <CBadge color="success">
+                          <FaCheck />
+                        </CBadge>
+                      ) : (
+                        <CBadge color="warning">
+                          <IoMdInformationCircleOutline />
+                        </CBadge>
+                      )}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {row.auditor === null ? (
+                        <CBadge color="info">En proceso</CBadge>
+                      ) : row.auditor === true ? (
+                        <CBadge color="success">Aprobado</CBadge>
+                      ) : (
+                        <CBadge color="danger">Rechazado</CBadge>
+                      )}
+                    </CTableDataCell>
+                  </CTableRow>
+                ))
+              ) : (
+                <CTableRow>
+                  <CTableDataCell colSpan="8" className="text-center">
+                    No hay conciliaciones para mostrar
                   </CTableDataCell>
                 </CTableRow>
-              ))
-            ) : (
-              <CTableRow>
-                <CTableDataCell colSpan="8" className="text-center">
-                  No hay conciliaciones para mostrar
-                </CTableDataCell>
-              </CTableRow>
-            )}
-          </CTableBody>
-        </CTable>
-      </CCardBody>
-      <ToastContainer />
-    </CCard>
+              )}
+            </CTableBody>
+          </CTable>
+        </CCardBody>
+        <ToastContainer />
+      </CCard>
+    </div>
   );
 };
 
